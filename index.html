@@ -360,7 +360,17 @@ html, body {
   <div class="live-chip"><div class="live-blink"></div>Ao vivo</div>
 </div>
 
-<!-- CONTENT AREA -->
+<!-- ROMANEIO SELECTOR -->
+<div style="background:var(--bg2);border-bottom:1px solid var(--border);padding:10px 14px;display:flex;gap:8px;align-items:center">
+  <span style="font-size:0.65rem;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:0.08em;white-space:nowrap">Romaneio:</span>
+  <button id="btn-rom1" onclick="switchRomaneio(1)" style="flex:1;padding:8px 10px;border-radius:10px;border:1px solid rgba(240,106,15,0.5);background:rgba(240,106,15,0.15);color:var(--orange);font-family:var(--font-display);font-weight:800;font-size:0.8rem;cursor:pointer;transition:all 0.2s">79.512</button>
+  <button id="btn-rom2" onclick="switchRomaneio(2)" style="flex:1;padding:8px 10px;border-radius:10px;border:1px solid var(--border);background:transparent;color:var(--muted);font-family:var(--font-display);font-weight:800;font-size:0.8rem;cursor:pointer;transition:all 0.2s">80.724</button>
+  <div id="rom-badge" style="background:rgba(240,106,15,0.12);border:1px solid rgba(240,106,15,0.2);border-radius:8px;padding:4px 8px;white-space:nowrap">
+    <span style="font-size:0.6rem;color:var(--muted)">Noroeste SP</span>
+  </div>
+</div>
+
+
 <div class="content">
 
   <!-- ═══ PANEL: OVERVIEW ═══ -->
@@ -386,16 +396,16 @@ html, body {
       <div class="kpi-card" onclick="go('rota')">
         <span class="kpi-emoji">🛣️</span>
         <div class="kpi-lbl">KM Total</div>
-        <div class="kpi-val lg amber" data-target="1200" data-int="1" data-suf=" km">0</div>
+        <div class="kpi-val lg amber" data-target="2000" data-int="1" data-suf=" km">0</div>
         <div class="kpi-foot">ida + volta</div>
-        <div class="kpi-badge badge-up">~17h condução</div>
+        <div class="kpi-badge badge-up">~28h condução</div>
       </div>
       <div class="kpi-card" onclick="go('custos')">
         <span class="kpi-emoji">📈</span>
         <div class="kpi-lbl">Margem</div>
-        <div class="kpi-val lg green" data-target="88.5" data-suf="%">0</div>
+        <div class="kpi-val lg green" data-target="81.3" data-suf="%">0</div>
         <div class="kpi-foot">operacional</div>
-        <div class="kpi-badge badge-up">R$ 46.669,40</div>
+        <div class="kpi-badge badge-up">R$ 42.897,36</div>
       </div>
     </div>
 
@@ -406,13 +416,13 @@ html, body {
           <span class="kpi-emoji" style="display:inline;margin-right:6px">💸</span>
           <span class="kpi-lbl">Custo Total da Viagem</span>
         </div>
-        <div class="kpi-val sm red">R$ 6.082,04</div>
+        <div class="kpi-val sm red">R$ 9.854,08</div>
       </div>
       <div style="margin-top:10px">
         <div style="display:flex;justify-content:space-between;font-size:0.66rem;color:var(--muted);margin-bottom:4px">
-          <span>% do faturamento</span><span style="color:var(--red)">11.5%</span>
+          <span>% do faturamento</span><span style="color:var(--red)">18.7%</span>
         </div>
-        <div class="bar-track"><div class="bar-fill" style="background:linear-gradient(90deg,var(--red),#ff7a94);width:11.5%"></div></div>
+        <div class="bar-track"><div class="bar-fill" style="background:linear-gradient(90deg,var(--red),#ff7a94);width:18.7%"></div></div>
       </div>
     </div>
 
@@ -440,14 +450,26 @@ html, body {
       <div class="kpi-card">
         <span class="kpi-emoji">📦</span>
         <div class="kpi-lbl">Pedidos</div>
-        <div class="kpi-val lg orange">28</div>
-        <div class="kpi-foot">24 cidades</div>
+        <div class="kpi-val lg orange" id="carga-kpi-pedidos">28</div>
+        <div class="kpi-foot" id="carga-kpi-cidades">24 cidades</div>
       </div>
       <div class="kpi-card">
         <span class="kpi-emoji">💰</span>
         <div class="kpi-lbl">Faturado</div>
-        <div class="kpi-val md">R$ 52.751</div>
-        <div class="kpi-foot">total NF</div>
+        <div class="kpi-val md" id="carga-kpi-faturado">R$ 52.751</div>
+        <div class="kpi-foot" id="carga-kpi-nfs">28 NFs</div>
+      </div>
+      <div class="kpi-card">
+        <span class="kpi-emoji">🏙️</span>
+        <div class="kpi-lbl">Cidades</div>
+        <div class="kpi-val lg" id="carga-kpi-ncidades">24</div>
+        <div class="kpi-foot">municípios atendidos</div>
+      </div>
+      <div class="kpi-card">
+        <span class="kpi-emoji">🎯</span>
+        <div class="kpi-lbl">Ticket Médio</div>
+        <div class="kpi-val sm amber" id="carga-kpi-ticket">R$ 2.197,98</div>
+        <div class="kpi-foot">por cidade</div>
       </div>
     </div>
 
@@ -457,7 +479,60 @@ html, body {
       <div class="bar-list" id="carga-bars"></div>
     </div>
 
-    <div class="sec-label">Detalhamento</div>
+    <!-- Explicação ponto de equilíbrio por pedido -->
+    <div class="sec-label">Ponto de Equilíbrio</div>
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:12px">
+
+      <!-- Título -->
+      <div style="font-family:var(--font-display);font-weight:800;font-size:0.88rem;color:var(--white);margin-bottom:10px">
+        💡 O que significa o mínimo por pedido?
+      </div>
+
+      <!-- Explicação em texto -->
+      <div style="font-size:0.72rem;color:var(--muted);line-height:1.7;padding:10px 12px;background:rgba(255,255,255,0.03);border-radius:10px;margin-bottom:12px;border-left:3px solid var(--orange)">
+        O custo total da viagem — motoristas, km rodado e hospedagem — precisa ser pago
+        independente de quantos pedidos foram entregues. Dividindo esse custo pelo número
+        de pedidos, chegamos ao <strong style="color:var(--white)">valor mínimo que cada pedido precisa faturar</strong>
+        para que a viagem pelo menos cubra seus custos. Abaixo desse valor, o pedido gera prejuízo.
+      </div>
+
+      <!-- Fórmula visual -->
+      <div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:14px;flex-wrap:wrap">
+        <div style="text-align:center;padding:8px 12px;background:rgba(255,77,109,0.1);border:1px solid rgba(255,77,109,0.2);border-radius:10px">
+          <div style="font-size:0.6rem;color:var(--muted)">Custo total viagem</div>
+          <div style="font-family:var(--font-display);font-weight:900;font-size:0.95rem;color:var(--red)" id="min-ped-custo">—</div>
+        </div>
+        <div style="font-size:1.2rem;color:var(--muted)">÷</div>
+        <div style="text-align:center;padding:8px 12px;background:rgba(74,158,255,0.1);border:1px solid rgba(74,158,255,0.2);border-radius:10px">
+          <div style="font-size:0.6rem;color:var(--muted)">Nº de pedidos</div>
+          <div style="font-family:var(--font-display);font-weight:900;font-size:0.95rem;color:var(--blue)" id="min-ped-qtd">—</div>
+        </div>
+        <div style="font-size:1.2rem;color:var(--muted)">=</div>
+        <div style="text-align:center;padding:8px 12px;background:rgba(245,200,66,0.12);border:1px solid rgba(245,200,66,0.3);border-radius:10px">
+          <div style="font-size:0.6rem;color:var(--muted)">Mínimo/pedido</div>
+          <div style="font-family:var(--font-display);font-weight:900;font-size:0.95rem;color:var(--amber)" id="carga-min-cidade">—</div>
+        </div>
+      </div>
+
+      <!-- Semáforo explicativo -->
+      <div style="font-size:0.65rem;font-weight:700;color:var(--white);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.07em">Como ler o status de cada pedido:</div>
+      <div style="display:flex;flex-direction:column;gap:5px">
+        <div style="display:flex;align-items:flex-start;gap:8px;font-size:0.68rem;padding:7px 10px;background:rgba(0,201,140,0.07);border-radius:8px">
+          <span style="background:rgba(0,201,140,0.15);color:var(--green);padding:1px 7px;border-radius:6px;font-weight:700;flex-shrink:0">✅ OK</span>
+          <span style="color:var(--muted)">Pedido fatura acima de 1,5× o mínimo. A viagem está bem coberta mesmo se houver imprevistos.</span>
+        </div>
+        <div style="display:flex;align-items:flex-start;gap:8px;font-size:0.68rem;padding:7px 10px;background:rgba(245,200,66,0.06);border-radius:8px">
+          <span style="background:rgba(245,200,66,0.15);color:var(--amber);padding:1px 7px;border-radius:6px;font-weight:700;flex-shrink:0">⚠️ Atenção</span>
+          <span style="color:var(--muted)">Pedido paga o custo, mas com folga pequena. Qualquer desconto concedido ou devolução pode virar prejuízo.</span>
+        </div>
+        <div style="display:flex;align-items:flex-start;gap:8px;font-size:0.68rem;padding:7px 10px;background:rgba(255,77,109,0.06);border-radius:8px">
+          <span style="background:rgba(255,77,109,0.15);color:var(--red);padding:1px 7px;border-radius:6px;font-weight:700;flex-shrink:0">🔴 Baixo</span>
+          <span style="color:var(--muted)">Pedido fatura abaixo do mínimo. Esse pedido está custando dinheiro para a operação.</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec-label">Pedidos — Detalhamento</div>
     <div class="widget" style="padding:14px 8px">
       <table class="city-table">
         <thead>
@@ -466,6 +541,7 @@ html, body {
             <th>Cidade</th>
             <th style="text-align:center">Ped.</th>
             <th>Valor</th>
+            <th style="text-align:center">Status</th>
           </tr>
         </thead>
         <tbody id="carga-tbody"></tbody>
@@ -501,26 +577,26 @@ html, body {
       <div class="kpi-card">
         <span class="kpi-emoji">➡️</span>
         <div class="kpi-lbl">Ida</div>
-        <div class="kpi-val md amber">~600 km</div>
-        <div class="kpi-foot">Mauá → Noroeste</div>
+        <div class="kpi-val md amber" id="rota-kpi-ida">—</div>
+        <div class="kpi-foot" id="rota-kpi-ida-sub">Mauá → última entrega</div>
       </div>
       <div class="kpi-card">
         <span class="kpi-emoji">⬅️</span>
         <div class="kpi-lbl">Volta</div>
-        <div class="kpi-val md amber">~600 km</div>
-        <div class="kpi-foot">Noroeste → Mauá</div>
+        <div class="kpi-val md amber" id="rota-kpi-volta">—</div>
+        <div class="kpi-foot">última entrega → Mauá</div>
       </div>
       <div class="kpi-card highlight">
         <span class="kpi-emoji">🛣️</span>
         <div class="kpi-lbl">Total Rodado</div>
-        <div class="kpi-val md orange">~1.200 km</div>
-        <div class="kpi-foot">circuito completo</div>
+        <div class="kpi-val md orange" id="rota-kpi-total">—</div>
+        <div class="kpi-foot" id="rota-kpi-total-sub">circuito completo</div>
       </div>
       <div class="kpi-card">
         <span class="kpi-emoji">⏱️</span>
-        <div class="kpi-lbl">Condução</div>
-        <div class="kpi-val md green">~17 h</div>
-        <div class="kpi-foot">tempo de direção</div>
+        <div class="kpi-lbl">Tempo Condução</div>
+        <div class="kpi-val md green" id="rota-kpi-tempo">—</div>
+        <div class="kpi-foot">a 70 km/h média</div>
       </div>
     </div>
 
@@ -532,7 +608,7 @@ html, body {
 
     <div class="sec-label">Período</div>
     <div class="info-grid">
-      <div class="info-tile"><div class="it-icon">🗓️</div><div class="it-val" style="color:var(--orange)">3 Dias</div><div class="it-lbl">Duração</div></div>
+      <div class="info-tile"><div class="it-icon">🗓️</div><div class="it-val" style="color:var(--orange)" id="rota-dias">3 Dias</div><div class="it-lbl">Duração</div></div>
       <div class="info-tile"><div class="it-icon">📅</div><div class="it-val" style="color:var(--amber)">Dia 4–6</div><div class="it-lbl">Retorno dia 7</div></div>
       <div class="info-tile"><div class="it-icon">💡</div><div class="it-val">70 km/h</div><div class="it-lbl">Vel. média</div></div>
       <div class="info-tile"><div class="it-icon">🚛</div><div class="it-val" style="color:var(--green)">R$ 3,31</div><div class="it-lbl">Custo/km</div></div>
@@ -548,13 +624,13 @@ html, body {
       <div class="kpi-card"><span class="kpi-emoji">📋</span><div class="kpi-lbl">Encargos</div><div class="kpi-val sm">R$ 2.485,07</div></div>
       <div class="kpi-card"><span class="kpi-emoji">🎁</span><div class="kpi-lbl">Benefícios</div><div class="kpi-val sm">R$ 683,80</div></div>
       <div class="kpi-card"><span class="kpi-emoji">⏰</span><div class="kpi-lbl">Hora Extra</div><div class="kpi-val sm amber">R$ 2.310,43</div><div class="kpi-foot">média jan–abr 2026</div></div>
-      <div class="kpi-card highlight" style="grid-column:1/-1"><span class="kpi-emoji">💰</span><div class="kpi-lbl">Total Mensal (com H.E.)</div><div class="kpi-val md orange">R$ 8.242,94</div></div>
+      <div class="kpi-card highlight" style="grid-column:1/-1"><span class="kpi-emoji">👥</span><div class="kpi-lbl">Total Mensal — 2 Motoristas</div><div class="kpi-val md orange">R$ 16.485,88</div><div class="kpi-foot">R$ 8.242,94 × 2 motoristas</div></div>
     </div>
 
     <div class="highlight-box">
       <div class="hb-lbl">Custo da Viagem (3 dias)</div>
-      <div class="hb-val">R$ 1.124,04</div>
-      <div class="hb-sub">R$ 8.242,94 ÷ 22 dias × 3 · representa 2,1% do faturado</div>
+      <div class="hb-val">R$ 2.248,08</div>
+      <div class="hb-sub">R$ 16.485,88 ÷ 22 dias × 3 · 2 motoristas no mesmo caminhão · representa 4,3% do faturado</div>
     </div>
 
     <div class="sec-label">Hospedagem</div>
@@ -622,8 +698,8 @@ html, body {
     </div>
 
     <div class="highlight-box">
-      <div class="hb-lbl">1.200 km × R$ 3,31 / km</div>
-      <div class="hb-val">R$ 3.972,00</div>
+      <div class="hb-lbl">2.000 km × R$ 3,31 / km</div>
+      <div class="hb-val">R$ 6.620,00</div>
       <div class="hb-sub">custo operacional do caminhão na viagem · frete sugerido c/ 20% lucro: R$ 3,97/km</div>
     </div>
   </div>
@@ -635,6 +711,179 @@ html, body {
 
     <div class="sec-label">Potencial de Mercado por Cidade</div>
     <div id="mercado-cards"></div>
+
+  </div>
+
+  <!-- ═══ PANEL: DIRETOR ═══ -->
+  <div id="panel-diretor" class="panel">
+
+    <!-- FREQ SELECTOR -->
+    <div class="sec-label">Projeção por Frequência</div>
+    <div style="display:flex;gap:6px;margin-bottom:14px">
+      <button id="freq-s" onclick="setFreq('s')" style="flex:1;padding:9px 4px;border-radius:10px;border:1px solid rgba(240,106,15,0.5);background:rgba(240,106,15,0.15);color:var(--orange);font-family:var(--font-display);font-weight:800;font-size:0.78rem;cursor:pointer">Semanal</button>
+      <button id="freq-q" onclick="setFreq('q')" style="flex:1;padding:9px 4px;border-radius:10px;border:1px solid var(--border);background:transparent;color:var(--muted);font-family:var(--font-display);font-weight:800;font-size:0.78rem;cursor:pointer">Quinzenal</button>
+      <button id="freq-m" onclick="setFreq('m')" style="flex:1;padding:9px 4px;border-radius:10px;border:1px solid var(--border);background:transparent;color:var(--muted);font-family:var(--font-display);font-weight:800;font-size:0.78rem;cursor:pointer">Mensal</button>
+    </div>
+
+    <!-- COMBINADO HIGHLIGHT -->
+    <div style="background:linear-gradient(135deg,rgba(240,106,15,0.14),rgba(240,106,15,0.03));border:1px solid rgba(240,106,15,0.3);border-radius:14px;padding:14px;margin-bottom:12px">
+      <div style="font-size:0.62rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px">Combinado (79.512 + 80.724)</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+        <div style="text-align:center">
+          <div style="font-size:0.62rem;color:var(--muted)">Faturamento/mês</div>
+          <div style="font-family:var(--font-display);font-weight:900;font-size:1.2rem;color:var(--white)" id="dir-comb-fat-mes">—</div>
+        </div>
+        <div style="text-align:center">
+          <div style="font-size:0.62rem;color:var(--muted)">Margem/mês</div>
+          <div style="font-family:var(--font-display);font-weight:900;font-size:1.2rem;color:var(--green)" id="dir-comb-marg-mes">—</div>
+        </div>
+        <div style="text-align:center">
+          <div style="font-size:0.62rem;color:var(--muted)">Faturamento/ano</div>
+          <div style="font-family:var(--font-display);font-weight:900;font-size:1rem;color:var(--orange)" id="dir-comb-fat-ano">—</div>
+        </div>
+        <div style="text-align:center">
+          <div style="font-size:0.62rem;color:var(--muted)">Margem/ano</div>
+          <div style="font-family:var(--font-display);font-weight:900;font-size:1rem;color:var(--green)" id="dir-comb-marg-ano">—</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- COMPARATIVO LADO A LADO -->
+    <div class="sec-label">Comparativo por Romaneio</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">
+      <!-- R1 -->
+      <div style="background:var(--card);border:1px solid rgba(240,106,15,0.3);border-radius:14px;overflow:hidden">
+        <div style="background:rgba(240,106,15,0.15);padding:10px;text-align:center">
+          <div style="font-family:var(--font-display);font-weight:900;font-size:0.9rem;color:var(--orange)">79.512</div>
+          <div style="font-size:0.6rem;color:var(--muted)">Noroeste SP</div>
+        </div>
+        <div style="padding:10px;display:flex;flex-direction:column;gap:7px">
+          <div style="display:flex;justify-content:space-between;font-size:0.7rem"><span style="color:var(--muted)">Fat/viagem</span><span style="font-weight:700">R$ 52.751</span></div>
+          <div style="display:flex;justify-content:space-between;font-size:0.7rem"><span style="color:var(--muted)">Custo/viagem</span><span style="font-weight:700;color:var(--red)">R$ 9.854</span></div>
+          <div style="display:flex;justify-content:space-between;font-size:0.7rem"><span style="color:var(--muted)">Margem</span><span style="font-weight:700;color:var(--green)">81,3%</span></div>
+          <div style="display:flex;justify-content:space-between;font-size:0.7rem"><span style="color:var(--muted)">KM</span><span style="font-weight:700">2.000 km</span></div>
+          <div style="display:flex;justify-content:space-between;font-size:0.7rem"><span style="color:var(--muted)">Fat/mês</span><span style="font-family:var(--font-display);font-weight:800;color:var(--orange)" id="dir-r1-fat-mes">—</span></div>
+          <div style="display:flex;justify-content:space-between;font-size:0.7rem"><span style="color:var(--muted)">Marg/ano</span><span style="font-family:var(--font-display);font-weight:800;color:var(--green)" id="dir-r1-marg-ano">—</span></div>
+        </div>
+      </div>
+      <!-- R2 -->
+      <div style="background:var(--card);border:1px solid rgba(74,158,255,0.3);border-radius:14px;overflow:hidden">
+        <div style="background:rgba(74,158,255,0.12);padding:10px;text-align:center">
+          <div style="font-family:var(--font-display);font-weight:900;font-size:0.9rem;color:var(--blue)">80.724</div>
+          <div style="font-size:0.6rem;color:var(--muted)">Noroeste SP</div>
+        </div>
+        <div style="padding:10px;display:flex;flex-direction:column;gap:7px">
+          <div style="display:flex;justify-content:space-between;font-size:0.7rem"><span style="color:var(--muted)">Fat/viagem</span><span style="font-weight:700">R$ 43.128</span></div>
+          <div style="display:flex;justify-content:space-between;font-size:0.7rem"><span style="color:var(--muted)">Custo/viagem</span><span style="font-weight:700;color:var(--red)">R$ 10.317</span></div>
+          <div style="display:flex;justify-content:space-between;font-size:0.7rem"><span style="color:var(--muted)">Margem</span><span style="font-weight:700;color:var(--amber)">76,1%</span></div>
+          <div style="display:flex;justify-content:space-between;font-size:0.7rem"><span style="color:var(--muted)">KM</span><span style="font-weight:700">2.140 km</span></div>
+          <div style="display:flex;justify-content:space-between;font-size:0.7rem"><span style="color:var(--muted)">Fat/mês</span><span style="font-family:var(--font-display);font-weight:800;color:var(--blue)" id="dir-r2-fat-mes">—</span></div>
+          <div style="display:flex;justify-content:space-between;font-size:0.7rem"><span style="color:var(--muted)">Marg/ano</span><span style="font-family:var(--font-display);font-weight:800;color:var(--green)" id="dir-r2-marg-ano">—</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PONTO DE EQUILÍBRIO -->
+    <div class="sec-label">Ponto de Equilíbrio por Pedido</div>
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:12px">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
+        <div style="text-align:center;padding:10px;background:rgba(240,106,15,0.08);border:1px solid rgba(240,106,15,0.2);border-radius:10px">
+          <div style="font-size:0.6rem;color:var(--muted)">Mín/pedido · 79.512</div>
+          <div style="font-family:var(--font-display);font-weight:900;font-size:1.3rem;color:var(--orange)">R$ 351,93</div>
+          <div style="font-size:0.6rem;color:var(--muted);margin-top:2px">R$ 9.854 ÷ 28 pedidos</div>
+        </div>
+        <div style="text-align:center;padding:10px;background:rgba(74,158,255,0.08);border:1px solid rgba(74,158,255,0.2);border-radius:10px">
+          <div style="font-size:0.6rem;color:var(--muted)">Mín/pedido · 80.724</div>
+          <div style="font-family:var(--font-display);font-weight:900;font-size:1.3rem;color:var(--blue)">R$ 429,89</div>
+          <div style="font-size:0.6rem;color:var(--muted);margin-top:2px">R$ 10.317 ÷ 24 pedidos</div>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:10px">
+        <div style="display:flex;align-items:center;gap:8px;font-size:0.68rem">
+          <span style="background:rgba(0,201,140,0.1);color:var(--green);padding:2px 8px;border-radius:6px;font-weight:700">✅ OK</span>
+          <span style="color:var(--muted)">Pedido acima de 1,5× o mínimo — saudável</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;font-size:0.68rem">
+          <span style="background:rgba(245,200,66,0.12);color:var(--amber);padding:2px 8px;border-radius:6px;font-weight:700">⚠️ Atenção</span>
+          <span style="color:var(--muted)">Entre 1× e 1,5× — qualquer desconto vira prejuízo</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;font-size:0.68rem">
+          <span style="background:rgba(255,77,109,0.12);color:var(--red);padding:2px 8px;border-radius:6px;font-weight:700">🔴 Baixo</span>
+          <span style="color:var(--muted)">Abaixo do mínimo — pedido no prejuízo</span>
+        </div>
+      </div>
+      <div style="background:rgba(245,200,66,0.06);border:1px solid rgba(245,200,66,0.2);border-radius:10px;padding:10px">
+        <div style="font-size:0.65rem;font-weight:700;color:var(--amber);margin-bottom:6px">⚠️ Pedidos em zona de atenção</div>
+        <div style="display:flex;flex-direction:column;gap:4px">
+          <div style="display:flex;justify-content:space-between;font-size:0.68rem"><span style="color:var(--muted)">Franca — 3 ped. <span style="color:var(--white);font-size:0.6rem">(79.512)</span></span><span style="font-weight:700;color:var(--amber)">R$ 500,13/ped.</span></div>
+          <div style="display:flex;justify-content:space-between;font-size:0.68rem"><span style="color:var(--muted)">Jaboticabal — 1 ped. <span style="color:var(--white);font-size:0.6rem">(80.724)</span></span><span style="font-weight:700;color:var(--amber)">R$ 618,69/ped.</span></div>
+          <div style="display:flex;justify-content:space-between;font-size:0.68rem"><span style="color:var(--muted)">Nova Luzitânia — 1 ped. <span style="color:var(--white);font-size:0.6rem">(80.724)</span></span><span style="font-weight:700;color:var(--amber)">R$ 528,69/ped.</span></div>
+          <div style="display:flex;justify-content:space-between;font-size:0.68rem"><span style="color:var(--muted)">Franca — 1 ped. <span style="color:var(--white);font-size:0.6rem">(80.724)</span></span><span style="font-weight:700;color:var(--amber)">R$ 507,85/ped.</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CUSTO KM REAL -->
+    <div class="sec-label">Custo/km Real vs Tabela</div>
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:12px">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
+        <div style="text-align:center;padding:10px;background:rgba(255,255,255,0.03);border-radius:10px">
+          <div style="font-size:0.62rem;color:var(--muted)">Custo/km tabela</div>
+          <div style="font-family:var(--font-display);font-weight:900;font-size:1.4rem;color:var(--muted)">R$ 3,31</div>
+          <div style="font-size:0.6rem;color:var(--muted)">1 motorista base</div>
+        </div>
+        <div style="text-align:center;padding:10px;background:rgba(240,106,15,0.08);border:1px solid rgba(240,106,15,0.2);border-radius:10px">
+          <div style="font-size:0.62rem;color:var(--muted)">Custo/km real</div>
+          <div style="font-family:var(--font-display);font-weight:900;font-size:1.4rem;color:var(--orange)">R$ 4,26</div>
+          <div style="font-size:0.6rem;color:var(--muted)">2 mot. c/ hora extra</div>
+        </div>
+      </div>
+      <div style="background:rgba(255,77,109,0.08);border:1px solid rgba(255,77,109,0.2);border-radius:10px;padding:10px">
+        <div style="font-size:0.7rem;color:var(--red);font-weight:700;margin-bottom:4px">⚠️ Impacto no frete</div>
+        <div style="font-size:0.68rem;color:var(--muted);line-height:1.5">O custo/km real é <strong style="color:var(--white)">R$ 0,95 maior</strong> que o tabelado. Em 2.000 km isso representa <strong style="color:var(--red)">R$ 1.900 a mais</strong> por viagem não contemplado na precificação original.</div>
+      </div>
+      <div style="margin-top:10px;background:rgba(0,201,140,0.08);border:1px solid rgba(0,201,140,0.2);border-radius:10px;padding:10px">
+        <div style="font-size:0.7rem;color:var(--green);font-weight:700;margin-bottom:4px">💡 Frete sugerido</div>
+        <div style="font-size:0.68rem;color:var(--muted);line-height:1.5">Com 20% de lucro sobre custo real: <strong style="color:var(--white)">R$ 5,11/km</strong>. Em 2.000 km = <strong style="color:var(--green)">R$ 10.220 de frete</strong>.</div>
+      </div>
+    </div>
+
+    <!-- KM EXCEDENTE -->
+    <div class="sec-label">685 km Excedentes — 79.512</div>
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:12px">
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:10px;text-align:center">
+        <div style="padding:8px;background:rgba(255,255,255,0.03);border-radius:8px">
+          <div style="font-family:var(--font-display);font-weight:900;font-size:1rem;color:var(--muted)">1.315 km</div>
+          <div style="font-size:0.58rem;color:var(--muted)">rota calculada</div>
+        </div>
+        <div style="padding:8px;background:rgba(240,106,15,0.08);border-radius:8px">
+          <div style="font-family:var(--font-display);font-weight:900;font-size:1rem;color:var(--orange)">2.000 km</div>
+          <div style="font-size:0.58rem;color:var(--muted)">odômetro real</div>
+        </div>
+        <div style="padding:8px;background:rgba(255,77,109,0.08);border-radius:8px">
+          <div style="font-family:var(--font-display);font-weight:900;font-size:1rem;color:var(--red)">+685 km</div>
+          <div style="font-size:0.58rem;color:var(--muted)">diferença</div>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:6px">
+        <div style="display:flex;align-items:center;gap:8px;font-size:0.7rem;padding:6px 8px;background:rgba(255,255,255,0.02);border-radius:8px">
+          <span style="font-size:1rem">🚦</span><span style="color:var(--muted)">Desvios por tráfego / obras nas rodovias</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;font-size:0.7rem;padding:6px 8px;background:rgba(255,255,255,0.02);border-radius:8px">
+          <span style="font-size:1rem">🔄</span><span style="color:var(--muted)">Reentregas ou tentativas frustradas</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;font-size:0.7rem;padding:6px 8px;background:rgba(255,255,255,0.02);border-radius:8px">
+          <span style="font-size:1rem">📍</span><span style="color:var(--muted)">Endereços fora da rota principal otimizada</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;font-size:0.7rem;padding:6px 8px;background:rgba(255,77,109,0.08);border-radius:8px;border:1px solid rgba(255,77,109,0.15)">
+          <span style="font-size:1rem">💸</span><span style="color:var(--red)">Custo dos 685 km excedentes: <strong>R$ 2.917</strong> (@ R$ 4,26/km real)</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- PERGUNTAS DA DIRETORIA -->
+    <div class="sec-label">Perguntas Prováveis da Diretoria</div>
+    <div id="dir-perguntas"></div>
 
   </div>
 
@@ -665,6 +914,10 @@ html, body {
   <button class="tab-item" onclick="go('mercado')">
     <span class="tab-icon">🏪</span>
     <span class="tab-label">Mercado</span>
+  </button>
+  <button class="tab-item" onclick="go('diretor')">
+    <span class="tab-icon">🎯</span>
+    <span class="tab-label">Diretor</span>
   </button>
 </nav>
 
@@ -706,35 +959,151 @@ const kmData = [
   { cat:"Pedágio/Rastreador",   icon:"📡", mensal: 2500, porKm:0.25 },
 ];
 
-const routeStops = [
-  { label:"MAUÁ",        sub:"Saída",          origin:true },
-  { label:"FRANCA",      sub:"Patroc.Paulista" },
-  { label:"SERTÃOZINHO", sub:"Sales Oliveira"  },
-  { label:"JALES",       sub:"Sta.Fé do Sul"   },
-  { label:"VOTUPORANGA", sub:"Cardoso"         },
-  { label:"ARAÇATUBA",   sub:"Pereira Barreto" },
-  { label:"MAUÁ",        sub:"Retorno",        origin:true },
-];
-
-const routeSegs = [
-  { from:"Mauá",        to:"Franca",        km:380 },
-  { from:"Franca",      to:"Sertãozinho",   km: 80 },
-  { from:"Sertãozinho", to:"Jales",         km:200 },
-  { from:"Jales",       to:"Votuporanga",   km: 90 },
-  { from:"Votuporanga", to:"Araçatuba",     km:110 },
-  { from:"Araçatuba",   to:"Mauá",          km:340 },
-];
+const routeData = {
+  1: {
+    stops: [
+      { label:"MAUÁ",        sub:"Saída",           origin:true },
+      { label:"FRANCA",      sub:"Patroc.Paulista"              },
+      { label:"SERTÃOZINHO", sub:"Sales Oliveira"               },
+      { label:"JALES",       sub:"Sta.Fé do Sul"                },
+      { label:"VOTUPORANGA", sub:"Cardoso"                      },
+      { label:"ARAÇATUBA",   sub:"Pereira Barreto"              },
+      { label:"MAUÁ",        sub:"Retorno",         origin:true },
+    ],
+    segs: [
+      { from:"Mauá",         to:"Franca",           km: 380 },
+      { from:"Franca",       to:"Sertãozinho",      km:  80 },
+      { from:"Sertãozinho",  to:"Jales",            km: 200 },
+      { from:"Jales",        to:"Votuporanga",      km:  90 },
+      { from:"Votuporanga",  to:"Araçatuba",        km: 110 },
+      { from:"Araçatuba",    to:"Mauá",             km: 340 },
+    ],
+    ida: 975,   volta: 340,  total: 2000, tempo: "~28 h",
+    idaSub: "Mauá → Araçatuba (odômetro real)",
+    totalSub: "odômetro real informado pelo motorista",
+  },
+  2: {
+    stops: [
+      { label:"MAUÁ",          sub:"Saída",          origin:true },
+      { label:"FRANCA",        sub:"Pedregulho"                  },
+      { label:"RIB.PRETO",     sub:"Jaboticabal"                 },
+      { label:"SJ.RIO PRETO",  sub:"Bálsamo"                     },
+      { label:"OLÍMPIA",       sub:"Orindíuva"                   },
+      { label:"BURITAMA",      sub:"Sebastianópolis"             },
+      { label:"MAUÁ",          sub:"Retorno",        origin:true },
+    ],
+    segs: [
+      { from:"Mauá",                   to:"Franca",                km: 398 },
+      { from:"Franca",                 to:"Ribeirão Preto",        km: 197 },
+      { from:"Ribeirão Preto",         to:"São José Rio Preto",    km: 255 },
+      { from:"São José Rio Preto",     to:"Olímpia / Orindíuva",   km: 215 },
+      { from:"Olímpia / Orindíuva",    to:"Sebastianópolis/Buritama",km: 275},
+      { from:"Buritama",               to:"Mauá",                  km: 520 },
+    ],
+    ida: 1620,  volta: 520,  total: 2140, tempo: "~31 h",
+    idaSub: "Mauá → Buritama (última entrega)",
+    totalSub: "circuito calculado trecho a trecho",
+  },
+};
 
 const brl = v => "R$ " + v.toLocaleString("pt-BR",{minimumFractionDigits:2,maximumFractionDigits:2});
 const maxVal = cities[0].value;
 const totalVal = cities.reduce((s,c)=>s+c.value,0);
+
+const romaneios = {
+  1: {
+    nome: "79.512",
+    regiao: "Noroeste SP",
+    pedidos: 28,
+    cidades: 24,
+    km: 2000,
+    dias: 3,
+    faturado: 52751.44,
+    custoMotoristas: 2248.08,
+    custoKm: 6620.00,
+    custoHosp: 986.00,
+    custoTotal: 9854.08,
+    margem: 42897.36,
+    margemPct: 81.3,
+    cities: [
+      { city:"CARDOSO",               orders:1, value:5113.00 },
+      { city:"AURIFLAMA",             orders:1, value:4924.25 },
+      { city:"STO.ANT. ARAÇANGUÁ",    orders:2, value:4602.33 },
+      { city:"BURITAMA",              orders:1, value:4125.00 },
+      { city:"SALES OLIVEIRA",        orders:1, value:4064.72 },
+      { city:"BALSAMO",               orders:1, value:3571.23 },
+      { city:"OLÍMPIA",               orders:2, value:2884.56 },
+      { city:"GENERAL SALGADO",       orders:1, value:2751.20 },
+      { city:"FLOREAL",               orders:1, value:2114.30 },
+      { city:"URÂNIA",                orders:1, value:1844.02 },
+      { city:"ITIRAPUÃ",              orders:1, value:1815.69 },
+      { city:"SERTÃOZINHO",           orders:1, value:1643.45 },
+      { city:"TABATINGA",             orders:1, value:1526.52 },
+      { city:"FRANCA",                orders:3, value:1500.40 },
+      { city:"JALES",                 orders:1, value:1420.26 },
+      { city:"PEREIRA BARRETO",       orders:1, value:1402.16 },
+      { city:"TANABI",                orders:1, value:1093.88 },
+      { city:"VOTUPORANGA",           orders:1, value:1068.00 },
+      { city:"SEBASTIANÓPOLIS SUL",   orders:1, value:1068.00 },
+      { city:"APARECIDA D'OESTE",     orders:1, value:1003.47 },
+      { city:"SANTA FÉ DO SUL",       orders:1, value:1003.47 },
+      { city:"ZACARIAS",              orders:1, value:1003.47 },
+      { city:"SANTANA PONTE PENSA",   orders:1, value: 605.82 },
+      { city:"PATROCÍNIO PAULISTA",   orders:1, value: 602.24 },
+    ]
+  },
+  2: {
+    nome: "80.724",
+    regiao: "Noroeste SP",
+    pedidos: 24,
+    cidades: 23,
+    km: 2140,
+    dias: 3,
+    faturado: 43128.12,
+    custoMotoristas: 2248.07,
+    custoKm: 7083.40,
+    custoHosp: 986.00,
+    custoTotal: 10317.47,
+    margem: 32810.65,
+    margemPct: 76.1,
+    cities: [
+      { city:"BURITAMA",                  orders:1, value:6143.45 },
+      { city:"FLOREAL",                   orders:1, value:3628.64 },
+      { city:"ORINDÍUVA",                 orders:1, value:3424.77 },
+      { city:"OLÍMPIA",                   orders:1, value:2902.00 },
+      { city:"SEBASTIANÓPOLIS SUL",       orders:2, value:2753.64 },
+      { city:"MACAUBAL",                  orders:1, value:2499.31 },
+      { city:"TABATINGA",                 orders:1, value:2358.14 },
+      { city:"SANTA CLARA D'OESTE",       orders:1, value:2089.03 },
+      { city:"PEDREGULHO",                orders:1, value:1991.42 },
+      { city:"JARDINÓPOLIS",              orders:1, value:1779.86 },
+      { city:"SÃO JOSÉ RIO PRETO",        orders:1, value:1631.97 },
+      { city:"UNIÃO PAULISTA",            orders:1, value:1530.36 },
+      { city:"PINDORAMA",                 orders:1, value:1344.59 },
+      { city:"APARECIDA D'OESTE",         orders:1, value:1297.49 },
+      { city:"TABAPUÃ",                   orders:1, value:1260.43 },
+      { city:"STO. ANT. DA ALEGRIA",      orders:1, value:1204.22 },
+      { city:"TRÊS FRONTEIRAS",           orders:1, value:1018.75 },
+      { city:"IBITINGA",                  orders:1, value: 908.00 },
+      { city:"RIBEIRÃO PRETO",            orders:1, value: 869.01 },
+      { city:"BÁLSAMO",                   orders:1, value: 837.81 },
+      { city:"JABOTICABAL",               orders:1, value: 618.69 },
+      { city:"NOVA LUZITÂNIA",            orders:1, value: 528.69 },
+      { city:"FRANCA",                    orders:1, value: 507.85 },
+    ]
+  }
+};
+
+let currentRomaneio = 1;
+
+
 
 // ─── TAB SWITCHING ───
 function go(id) {
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.tab-item').forEach(b=>b.classList.remove('active'));
   document.getElementById('panel-'+id).classList.add('active');
-  const ids = ['overview','carga','rota','custos','km','mercado'];
+  const ids = ['overview','carga','rota','custos','km','mercado','diretor'];
   document.querySelectorAll('.tab-item')[ids.indexOf(id)].classList.add('active');
   // scroll to top
   document.querySelector('.content').scrollTop = 0;
@@ -765,48 +1134,44 @@ function animateBars() {
 
 // ─── DONUT ───
 function makeDonut() {
-  const svg = document.getElementById('donut-svg');
-  const leg = document.getElementById('donut-legend');
-  if (!svg||!leg) return;
-  const items = [
-    { label:"Margem Líquida",  value:46669.40, color:"00c98c" },
-    { label:"Custo km",        value: 3972.00, color:"f06a0f" },
-    { label:"Hospedagem",      value:  986.00, color:"f5c842" },
-    { label:"Motorista (3d)",  value: 1124.04, color:"4a9eff" },
-  ];
-  const tot = items.reduce((s,i)=>s+i.value,0);
-  const cx=85,cy=85,r=62,sw=18, circ=2*Math.PI*r;
-  let off=0, html=`<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="${sw}"/>`;
-  items.forEach(it=>{
-    const d=it.value/tot*circ;
-    html+=`<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="#${it.color}" stroke-width="${sw}"
-      stroke-dasharray="${d} ${circ-d}" stroke-dashoffset="${-off}" transform="rotate(-90 ${cx} ${cy})">
-      <title>${it.label}: ${brl(it.value)}</title></circle>`;
-    off+=d;
-  });
-  html+=`<text x="${cx}" y="${cy-6}" text-anchor="middle" font-family="Nunito" font-size="9" fill="#7a9ab8">TOTAL</text>
-    <text x="${cx}" y="${cy+9}" text-anchor="middle" font-family="Nunito" font-size="11" font-weight="800" fill="white">52.751</text>`;
-  svg.innerHTML=html;
-  leg.innerHTML=items.map(it=>`
-    <div class="dl-item">
-      <div class="dl-dot" style="background:#${it.color}"></div>
-      <span class="dl-name">${it.label}</span>
-      <span class="dl-val">${brl(it.value)}</span>
-      <span class="dl-pct">${(it.value/tot*100).toFixed(1)}%</span>
-    </div>`).join('');
+  const r = romaneios[1];
+  buildDonut([
+    { label:"Margem Líquida",  value: r.margem,          color:"00c98c" },
+    { label:"Custo km",        value: r.custoKm,         color:"f06a0f" },
+    { label:"Hospedagem",      value: r.custoHosp,       color:"f5c842" },
+    { label:"Motoristas (3d)", value: r.custoMotoristas, color:"4a9eff" },
+  ], r.faturado);
 }
 
 // ─── ROUTE FLOW ───
-function makeRoute() {
+function makeRoute(num) {
+  num = num || 1;
+  const rd = routeData[num];
   const el = document.getElementById('route-flow');
   if (!el) return;
-  el.innerHTML = routeStops.map((s,i)=>`
+  el.innerHTML = rd.stops.map((s,i)=>`
     ${i>0?'<div class="r-line"></div>':''}
     <div class="r-stop">
       <div class="r-node ${s.origin?'origin':''}">${i+1}</div>
       <div class="r-name">${s.label}</div>
       <div class="r-sub">${s.sub}</div>
     </div>`).join('');
+
+  // Update rota KPI cards
+  const set = (id, val) => { const e=document.getElementById(id); if(e) e.textContent=val; };
+  set('rota-kpi-ida',       rd.ida.toLocaleString('pt-BR') + ' km');
+  set('rota-kpi-ida-sub',   rd.idaSub);
+  set('rota-kpi-volta',     rd.volta.toLocaleString('pt-BR') + ' km');
+  set('rota-kpi-total',     rd.total.toLocaleString('pt-BR') + ' km');
+  set('rota-kpi-total-sub', rd.totalSub);
+  set('rota-kpi-tempo',     rd.tempo);
+  set('rota-dias',          romaneios[num].dias + ' Dias');
+
+  // Rebuild trecho bars
+  const maxSeg = Math.max(...rd.segs.map(s=>s.km));
+  makeBars('route-bars', rd.segs.map(s=>({
+    label: `${s.from}→${s.to}`, value: s.km, display: `${s.km} km`
+  })), maxSeg, 'alt');
 }
 
 // ─── KM TILES ───
@@ -823,24 +1188,7 @@ function makeKmTiles() {
 
 // ─── SUMMARY ROWS ───
 function makeSummary() {
-  const el = document.getElementById('summary-rows');
-  if (!el) return;
-  const rows=[
-    {icon:"💰",name:"Faturamento Total",sub:"28 pedidos · 24 cidades",val:52751.44,color:"var(--orange)",cls:"total-row"},
-    {icon:"👤",name:"Custo Motorista",  sub:"3 dias (c/ hora extra)",  val:-1124.04,color:"var(--red)"},
-    {icon:"🏨",name:"Hospedagem",       sub:"Hotel + alimentação",    val:-986.00, color:"var(--red)"},
-    {icon:"🚛",name:"Custo km",         sub:"1.200 km × R$ 3,31",    val:-3972.00,color:"var(--red)"},
-    {icon:"📊",name:"Custo Total",      sub:"todos os custos",        val:-6082.04,color:"var(--red)",cls:"total-row"},
-    {icon:"📈",name:"Margem Operacional",sub:"88,5% do faturado",    val:46669.40,color:"var(--green)",cls:"margin-row"},
-  ];
-  el.innerHTML=rows.map(r=>`
-    <div class="stat-row ${r.cls||''}">
-      <div class="sr-info">
-        <span class="sr-icon">${r.icon}</span>
-        <div><div class="sr-name">${r.name}</div><div class="sr-sub">${r.sub}</div></div>
-      </div>
-      <div class="sr-val" style="color:${r.color}">${r.val<0?'- '+brl(Math.abs(r.val)):brl(r.val)}</div>
-    </div>`).join('');
+  buildSummaryRows(romaneios[1]);
 }
 
 // ─── ANIMATED NUMBERS ───
@@ -870,27 +1218,21 @@ function init() {
 
   // carga bars + table
   makeBars('carga-bars', cities.map(c=>({label:c.city,value:c.value,display:brl(c.value)})), maxVal);
-  const tb = document.getElementById('carga-tbody');
-  if(tb) tb.innerHTML = cities.map((c,i)=>`
-    <tr>
-      <td><span class="rank-chip">${i+1}</span></td>
-      <td style="font-size:0.72rem">${c.city}</td>
-      <td style="text-align:center"><span class="orders-dot">${c.orders}</span></td>
-      <td>${brl(c.value)}</td>
-    </tr>`).join('');
+  buildCargaTable(romaneios[1]);
+  updateMinPedido(romaneios[1]);
 
   // route
-  makeRoute();
-  makeBars('route-bars', routeSegs.map(s=>({label:`${s.from}→${s.to}`,value:s.km,display:`${s.km} km`})), 380, 'alt');
+  makeRoute(1);
 
   // km
   makeKmTiles();
   makeBars('km-pct-bars', kmData.map(k=>({label:k.cat,value:k.porKm,display:`R$ ${k.porKm.toFixed(2)}/km · ${(k.porKm/3.31*100).toFixed(0)}%`})), 1.40);
-  makeBars('km-trip-bars', kmData.map(k=>({label:k.cat,value:k.porKm*1200,display:brl(k.porKm*1200)})), 1680, 'blue');
+  makeBars('km-trip-bars', kmData.map(k=>({label:k.cat,value:k.porKm*2000,display:brl(k.porKm*2000)})), 1680, 'blue');
 
   makeDonut();
   makeSummary();
   makeMercado();
+  makeDiretor();
 
   // animate kpi numbers
   document.querySelectorAll('[data-target]').forEach(animNum);
@@ -898,7 +1240,138 @@ function init() {
   setTimeout(animateBars, 200);
 }
 
-// tap feedback for lodge cards
+// ─── DIRETOR ───
+const freqData = {
+  s: { label:"Semanal",   vezes:52,  mes:4.33 },
+  q: { label:"Quinzenal", vezes:26,  mes:2.17 },
+  m: { label:"Mensal",    vezes:12,  mes:1.0  },
+};
+let currentFreq = 's';
+
+function makeDiretor() {
+  // Perguntas da diretoria
+  const perguntas = [
+    { q:"Por que a margem do 80.724 é menor?",         r:"Faturamento R$9.623 menor com custos fixos quase idênticos. Menor carga = pior diluição do custo km e motoristas." },
+    { q:"Os 685 km excedentes do 79.512 são justificados?", r:"Rota calculada: 1.315 km. Odômetro: 2.000 km. Diferença de 685 km equivale a R$2.917 em custo não previsto." },
+    { q:"Por que 2 motoristas no mesmo caminhão?",     r:"Obrigação legal: viagens acima de 8h/dia de condução exigem 2 motoristas conforme legislação trabalhista (CLT + CTB)." },
+    { q:"A hora extra de R$2.310 está crescendo?",     r:"Média jan–abr 2026. Sem histórico de tendência disponível — recomendo rastrear mensalmente para identificar crescimento." },
+    { q:"O custo/km de R$3,31 está correto?",         r:"Não. Com 2 motoristas + hora extra o custo/km real é R$4,26. Diferença de R$0,95/km = R$1.900 a mais por viagem." },
+    { q:"Vale a pena a rota 80.724?",                  r:"Sim, mas com margem menor (76,1% vs 81,3%). O ponto de equilíbrio é R$10.317 — faturamento atual cobre com folga." },
+  ];
+  const el = document.getElementById('dir-perguntas');
+  if (el) el.innerHTML = perguntas.map(p=>`
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;margin-bottom:8px;overflow:hidden;cursor:pointer"
+         onclick="const d=this.querySelector('.pq-resp');d.style.display=d.style.display==='none'?'block':'none'">
+      <div style="padding:11px 14px;display:flex;justify-content:space-between;align-items:center;gap:8px">
+        <span style="font-size:0.75rem;font-weight:600;color:var(--white)">${p.q}</span>
+        <span style="color:var(--orange);font-size:0.9rem;flex-shrink:0">▾</span>
+      </div>
+      <div class="pq-resp" style="display:none;padding:0 14px 11px;font-size:0.7rem;color:var(--muted);line-height:1.6;border-top:1px solid var(--border);padding-top:10px">
+        💡 ${p.r}
+      </div>
+    </div>`).join('');
+
+  setFreq('s');
+}
+
+function setFreq(f) {
+  currentFreq = f;
+  // Update buttons
+  ['s','q','m'].forEach(k => {
+    const btn = document.getElementById('freq-'+k);
+    if (!btn) return;
+    btn.style.cssText = k === f
+      ? 'flex:1;padding:9px 4px;border-radius:10px;border:1px solid rgba(240,106,15,0.5);background:rgba(240,106,15,0.15);color:var(--orange);font-family:var(--font-display);font-weight:800;font-size:0.78rem;cursor:pointer'
+      : 'flex:1;padding:9px 4px;border-radius:10px;border:1px solid var(--border);background:transparent;color:var(--muted);font-family:var(--font-display);font-weight:800;font-size:0.78rem;cursor:pointer';
+  });
+
+  const fd = freqData[f];
+  const r1f = romaneios[1];
+  const r2f = romaneios[2];
+
+  const r1FatMes  = r1f.faturado  * fd.mes;
+  const r1MargAno = r1f.margem    * fd.vezes;
+  const r2FatMes  = r2f.faturado  * fd.mes;
+  const r2MargAno = r2f.margem    * fd.vezes;
+  const combFatMes  = (r1f.faturado  + r2f.faturado)  * fd.mes;
+  const combMargMes = (r1f.margem    + r2f.margem)    * fd.mes;
+  const combFatAno  = (r1f.faturado  + r2f.faturado)  * fd.vezes;
+  const combMargAno = (r1f.margem    + r2f.margem)    * fd.vezes;
+
+  const set = (id, val) => { const e=document.getElementById(id); if(e) e.textContent=val; };
+  set('dir-comb-fat-mes',  brl(combFatMes));
+  set('dir-comb-marg-mes', brl(combMargMes));
+  set('dir-comb-fat-ano',  brl(combFatAno));
+  set('dir-comb-marg-ano', brl(combMargAno));
+  set('dir-r1-fat-mes',    brl(r1FatMes));
+  set('dir-r1-marg-ano',   brl(r1MargAno));
+  set('dir-r2-fat-mes',    brl(r2FatMes));
+  set('dir-r2-marg-ano',   brl(r2MargAno));
+}
+
+function makeDiretor() {
+  const perguntas = [
+    { q:"Por que a margem do 80.724 é menor?",              r:"Faturamento R$9.623 menor com custos fixos quase idênticos. Menor carga = pior diluição do custo km e motoristas." },
+    { q:"Os 685 km excedentes do 79.512 são justificados?", r:"Rota calculada: 1.315 km. Odômetro: 2.000 km. Diferença de 685 km = R$2.917 em custo não previsto (@ R$4,26/km real)." },
+    { q:"Por que 2 motoristas no mesmo caminhão?",          r:"Obrigação legal: viagens acima de 8h/dia de condução exigem 2 motoristas (CLT + CTB Art. 67-A)." },
+    { q:"A hora extra de R$2.310 está crescendo?",          r:"Média jan–abr 2026. Sem histórico de tendência disponível — recomendo rastrear mensalmente." },
+    { q:"O custo/km de R$3,31 está correto?",               r:"Não. Com 2 motoristas + hora extra o custo/km real é R$4,26. São R$0,95/km a mais = R$1.900 por viagem não precificados." },
+    { q:"Vale a pena a rota 80.724?",                       r:"Sim, mas com margem menor (76,1% vs 81,3%). Ponto de equilíbrio é R$10.317 — faturamento atual cobre com folga de R$32.810." },
+  ];
+  const el = document.getElementById('dir-perguntas');
+  if (el) el.innerHTML = perguntas.map(p=>`
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;margin-bottom:8px;overflow:hidden;cursor:pointer"
+         onclick="const d=this.querySelector('.pq-resp');d.style.display=d.style.display==='none'?'block':'none'">
+      <div style="padding:11px 14px;display:flex;justify-content:space-between;align-items:center;gap:8px">
+        <span style="font-size:0.75rem;font-weight:600;color:var(--white)">${p.q}</span>
+        <span style="color:var(--orange);font-size:0.9rem;flex-shrink:0">▾</span>
+      </div>
+      <div class="pq-resp" style="display:none;padding:10px 14px 11px;font-size:0.7rem;color:var(--muted);line-height:1.6;border-top:1px solid var(--border)">
+        💡 ${p.r}
+      </div>
+    </div>`).join('');
+
+  setFreq('s');
+}
+
+// ─── UPDATE MIN PEDIDO FORMULA DISPLAY ───
+function updateMinPedido(r) {
+  const set = (id, val) => { const e = document.getElementById(id); if (e) e.textContent = val; };
+  set('min-ped-custo',   brl(r.custoTotal));
+  set('min-ped-qtd',     r.pedidos + ' pedidos');
+  set('carga-min-cidade', brl(r.custoTotal / r.pedidos));
+}
+
+// ─── CARGA TABLE WITH STATUS ───
+function buildCargaTable(r) {
+  const tb = document.getElementById('carga-tbody');
+  if (!tb) return;
+  const minPedido     = r.custoTotal / r.pedidos;
+  const limiteAtencao = minPedido * 1.5;
+  tb.innerHTML = r.cities.map((c,i) => {
+    const valorPorPedido = c.value / c.orders;
+    let statusHtml;
+    if (valorPorPedido < minPedido) {
+      statusHtml = `<span style="font-size:0.6rem;font-weight:700;color:var(--red);background:rgba(255,77,109,0.12);padding:2px 5px;border-radius:6px;white-space:nowrap">🔴 Baixo</span>`;
+    } else if (valorPorPedido < limiteAtencao) {
+      statusHtml = `<span style="font-size:0.6rem;font-weight:700;color:var(--amber);background:rgba(245,200,66,0.12);padding:2px 5px;border-radius:6px;white-space:nowrap">⚠️ Atenção</span>`;
+    } else {
+      statusHtml = `<span style="font-size:0.6rem;color:var(--green);background:rgba(0,201,140,0.1);padding:2px 5px;border-radius:6px">✅</span>`;
+    }
+    const rowBg = valorPorPedido < minPedido
+      ? 'background:rgba(255,77,109,0.04)'
+      : valorPorPedido < limiteAtencao
+        ? 'background:rgba(245,200,66,0.03)' : '';
+    return `<tr style="${rowBg}">
+      <td><span class="rank-chip">${i+1}</span></td>
+      <td style="font-size:0.7rem">${c.city}</td>
+      <td style="text-align:center"><span class="orders-dot">${c.orders}</span></td>
+      <td>${brl(c.value)}</td>
+      <td style="text-align:center">${statusHtml}</td>
+    </tr>`;
+  }).join('');
+}
+
 function tapCard(el) {
   el.style.borderColor = 'rgba(240,106,15,0.5)';
   el.style.transform = 'scale(1.03)';
@@ -1031,6 +1504,137 @@ function makeMercado() {
 }
 
 init();
+
+// ─── ROMANEIO DATA ───
+function switchRomaneio(num) {
+  currentRomaneio = num;
+  const r = romaneios[num];
+
+  // Update selector buttons
+  document.getElementById('btn-rom1').style.cssText = num===1
+    ? 'flex:1;padding:8px 10px;border-radius:10px;border:1px solid rgba(240,106,15,0.5);background:rgba(240,106,15,0.15);color:var(--orange);font-family:var(--font-display);font-weight:800;font-size:0.8rem;cursor:pointer;transition:all 0.2s'
+    : 'flex:1;padding:8px 10px;border-radius:10px;border:1px solid var(--border);background:transparent;color:var(--muted);font-family:var(--font-display);font-weight:800;font-size:0.8rem;cursor:pointer;transition:all 0.2s';
+  document.getElementById('btn-rom2').style.cssText = num===2
+    ? 'flex:1;padding:8px 10px;border-radius:10px;border:1px solid rgba(240,106,15,0.5);background:rgba(240,106,15,0.15);color:var(--orange);font-family:var(--font-display);font-weight:800;font-size:0.8rem;cursor:pointer;transition:all 0.2s'
+    : 'flex:1;padding:8px 10px;border-radius:10px;border:1px solid var(--border);background:transparent;color:var(--muted);font-family:var(--font-display);font-weight:800;font-size:0.8rem;cursor:pointer;transition:all 0.2s';
+
+  document.getElementById('rom-badge').innerHTML = `<span style="font-size:0.6rem;color:var(--muted)">${r.regiao}</span>`;
+
+  // Update overview KPIs
+  const kpiEls = document.querySelectorAll('[data-target]');
+  const targets = { pedidos: r.pedidos, faturado: r.faturado, km: r.km, margem: r.margemPct };
+  kpiEls.forEach(el => {
+    if (el.dataset.int && el.dataset.suf === ' km') { el.dataset.target = r.km; animNum(el); }
+    else if (el.dataset.suf === '%') { el.dataset.target = r.margemPct; animNum(el); }
+    else if (el.dataset.brl) { el.dataset.target = r.faturado; animNum(el); }
+    else if (el.dataset.int) { el.dataset.target = r.pedidos; animNum(el); }
+  });
+
+  // Update margin badge
+  document.querySelector('.kpi-badge.badge-up').textContent = brl(r.margem);
+
+  // Update cost card
+  const costVal = document.querySelector('.kpi-val.sm.red');
+  if (costVal) costVal.textContent = brl(r.custoTotal);
+
+  const pctEl = document.querySelector('[style*="color:var(--red)"]');
+
+  // Rebuild bars with new city data
+  makeRoute(num);
+  const maxV = r.cities[0].value;
+  makeBars('ov-bars', r.cities.slice(0,8).map(c=>({label:c.city,value:c.value,display:brl(c.value)})), maxV);
+  makeBars('carga-bars', r.cities.map(c=>({label:c.city,value:c.value,display:brl(c.value)})), maxV);
+
+  // Rebuild carga table with status
+  buildCargaTable(r);
+  updateMinPedido(r);
+
+  // Update carga KPIs
+  const nfs = r.pedidos; // cada pedido tem sua própria NF
+  const el_ped  = document.getElementById('carga-kpi-pedidos');
+  const el_cid  = document.getElementById('carga-kpi-cidades');
+  const el_fat  = document.getElementById('carga-kpi-faturado');
+  const el_nfs  = document.getElementById('carga-kpi-nfs');
+  const el_ncid = document.getElementById('carga-kpi-ncidades');
+  const el_tick = document.getElementById('carga-kpi-ticket');
+  if (el_ped)  el_ped.textContent  = r.pedidos;
+  if (el_cid)  el_cid.textContent  = `${r.cidades} cidades`;
+  if (el_fat)  el_fat.textContent  = 'R$ ' + (r.faturado/1000).toFixed(1) + 'k';
+  if (el_nfs)  el_nfs.textContent  = `${nfs} NFs`;
+  if (el_ncid) el_ncid.textContent = r.cidades;
+  if (el_tick) el_tick.textContent = brl(r.faturado / r.cidades);
+
+  // Update donut
+  const donutItems = [
+    { label:"Margem Líquida",   value: r.margem,          color:"00c98c" },
+    { label:"Custo km",         value: r.custoKm,         color:"f06a0f" },
+    { label:"Hospedagem",       value: r.custoHosp,       color:"f5c842" },
+    { label:"Motoristas (3d)",  value: r.custoMotoristas, color:"4a9eff" },
+  ];
+  buildDonut(donutItems, r.faturado);
+
+  // Update summary rows
+  buildSummaryRows(r);
+
+  // Update km trip bars
+  makeBars('km-trip-bars', kmData.map(k=>({label:k.cat,value:k.porKm*r.km,display:brl(k.porKm*r.km)})), kmData[0].porKm*r.km*1.1, 'blue');
+
+  // Update km highlight box
+  const kmHb = document.querySelector('#panel-km .hb-lbl');
+  const kmHv = document.querySelector('#panel-km .hb-val');
+  if (kmHb) kmHb.textContent = `${r.km.toLocaleString('pt-BR')} km × R$ 3,31 / km`;
+  if (kmHv) kmHv.textContent = brl(r.custoKm);
+
+  setTimeout(animateBars, 80);
+}
+
+function buildDonut(items, total) {
+  const svg = document.getElementById('donut-svg');
+  const leg = document.getElementById('donut-legend');
+  if (!svg||!leg) return;
+  const tot = items.reduce((s,i)=>s+i.value,0);
+  const cx=85,cy=85,r=62,sw=18, circ=2*Math.PI*r;
+  let off=0, html=`<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="${sw}"/>`;
+  items.forEach(it=>{
+    const d=it.value/tot*circ;
+    html+=`<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="#${it.color}" stroke-width="${sw}"
+      stroke-dasharray="${d} ${circ-d}" stroke-dashoffset="${-off}" transform="rotate(-90 ${cx} ${cy})">
+      <title>${it.label}: ${brl(it.value)}</title></circle>`;
+    off+=d;
+  });
+  const dispVal = (total/1000).toFixed(0)+'k';
+  html+=`<text x="${cx}" y="${cy-6}" text-anchor="middle" font-family="Nunito" font-size="9" fill="#7a9ab8">TOTAL</text>
+    <text x="${cx}" y="${cy+9}" text-anchor="middle" font-family="Nunito" font-size="11" font-weight="800" fill="white">${dispVal}</text>`;
+  svg.innerHTML=html;
+  leg.innerHTML=items.map(it=>`
+    <div class="dl-item">
+      <div class="dl-dot" style="background:#${it.color}"></div>
+      <span class="dl-name">${it.label}</span>
+      <span class="dl-val">${brl(it.value)}</span>
+      <span class="dl-pct">${(it.value/tot*100).toFixed(1)}%</span>
+    </div>`).join('');
+}
+
+function buildSummaryRows(r) {
+  const el = document.getElementById('summary-rows');
+  if (!el) return;
+  const rows=[
+    {icon:"💰",name:"Faturamento Total",   sub:`${r.pedidos} pedidos · ${r.cidades} cidades`, val: r.faturado,          color:"var(--orange)",cls:"total-row"},
+    {icon:"👥",name:"Custo 2 Motoristas",  sub:`${r.dias} dias (c/ hora extra)`,              val:-r.custoMotoristas,   color:"var(--red)"},
+    {icon:"🏨",name:"Hospedagem",          sub:`Hotel + alimentação ${r.dias} dias`,           val:-r.custoHosp,         color:"var(--red)"},
+    {icon:"🚛",name:"Custo km",            sub:`${r.km.toLocaleString('pt-BR')} km × R$ 3,31`,val:-r.custoKm,           color:"var(--red)"},
+    {icon:"📊",name:"Custo Total",         sub:"todos os custos",                             val:-r.custoTotal,         color:"var(--red)",cls:"total-row"},
+    {icon:"📈",name:"Margem Operacional",  sub:`${r.margemPct}% do faturado`,                val: r.margem,             color:"var(--green)",cls:"margin-row"},
+  ];
+  el.innerHTML=rows.map(row=>`
+    <div class="stat-row ${row.cls||''}">
+      <div class="sr-info">
+        <span class="sr-icon">${row.icon}</span>
+        <div><div class="sr-name">${row.name}</div><div class="sr-sub">${row.sub}</div></div>
+      </div>
+      <div class="sr-val" style="color:${row.color}">${row.val<0?'- '+brl(Math.abs(row.val)):brl(row.val)}</div>
+    </div>`).join('');
+}
 </script>
 </body>
 </html>
