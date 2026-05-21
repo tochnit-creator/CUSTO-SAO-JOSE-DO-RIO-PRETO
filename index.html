@@ -882,6 +882,207 @@ html, body {
 
   </div>
 
+  <!-- ═══ PANEL: BAURU ═══ -->
+  <div id="panel-bauru" class="panel">
+
+    <!-- Route selector -->
+    <div class="sec-label">Rota Bauru / Interior SP</div>
+    <div style="background:rgba(74,158,255,0.07);border:1px solid rgba(74,158,255,0.2);border-radius:12px;padding:10px 12px;margin-bottom:12px;display:flex;align-items:center;gap:8px">
+      <span style="font-size:1rem">ℹ️</span>
+      <div style="font-size:0.68rem;color:var(--muted);line-height:1.5"><strong style="color:var(--white)">1 Motorista</strong> com salário base + H.E. (R$ 8.242,94/mês) em todos os romaneios desta rota.</div>
+    </div>
+
+    <!-- Sub romaneio selector -->
+    <div style="display:flex;gap:6px;margin-bottom:14px">
+      <button id="bau-btn-1" onclick="setBauRom(1)" style="flex:1;padding:8px 4px;border-radius:10px;border:1px solid rgba(240,106,15,0.5);background:rgba(240,106,15,0.15);color:var(--orange);font-family:var(--font-display);font-weight:800;font-size:0.75rem;cursor:pointer;transition:all 0.2s">79.507</button>
+      <button id="bau-btn-2" onclick="setBauRom(2)" style="flex:1;padding:8px 4px;border-radius:10px;border:1px solid var(--border);background:transparent;color:var(--muted);font-family:var(--font-display);font-weight:800;font-size:0.75rem;cursor:pointer;transition:all 0.2s">80.252</button>
+      <button id="bau-btn-3" onclick="setBauRom(3)" style="flex:1;padding:8px 4px;border-radius:10px;border:1px solid var(--border);background:transparent;color:var(--muted);font-family:var(--font-display);font-weight:800;font-size:0.75rem;cursor:pointer;transition:all 0.2s">80.719</button>
+    </div>
+
+    <!-- KPIs -->
+    <div class="sec-label">Indicadores</div>
+    <div class="kpi-grid-2" style="margin-bottom:12px">
+      <div class="kpi-card">
+        <span class="kpi-emoji">📦</span>
+        <div class="kpi-lbl">Pedidos</div>
+        <div class="kpi-val lg orange" id="bau-kpi-pedidos">—</div>
+        <div class="kpi-foot" id="bau-kpi-cidades">—</div>
+      </div>
+      <div class="kpi-card">
+        <span class="kpi-emoji">💰</span>
+        <div class="kpi-lbl">Faturado</div>
+        <div class="kpi-val md" id="bau-kpi-fat">—</div>
+        <div class="kpi-foot" id="bau-kpi-nfs">—</div>
+      </div>
+      <div class="kpi-card highlight">
+        <span class="kpi-emoji">📈</span>
+        <div class="kpi-lbl">Margem Operacional</div>
+        <div class="kpi-val md green" id="bau-kpi-marg-pct">—</div>
+        <div class="kpi-foot" id="bau-kpi-marg-val">—</div>
+      </div>
+      <div class="kpi-card">
+        <span class="kpi-emoji">🛣️</span>
+        <div class="kpi-lbl">KM Estimado</div>
+        <div class="kpi-val md amber" id="bau-kpi-km">—</div>
+        <div class="kpi-foot">circuito completo</div>
+      </div>
+    </div>
+
+    <!-- Ponto de equilíbrio -->
+    <div class="sec-label">Ponto de Equilíbrio</div>
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:12px">
+      <div style="font-family:var(--font-display);font-weight:800;font-size:0.85rem;color:var(--white);margin-bottom:10px">💡 Mínimo por pedido</div>
+      <div style="font-size:0.7rem;color:var(--muted);line-height:1.6;padding:9px 11px;background:rgba(255,255,255,0.03);border-radius:9px;margin-bottom:12px;border-left:3px solid var(--orange)">
+        Custo total da viagem dividido pelo número de pedidos pagantes (excluindo bonificações). Cada pedido precisa faturar pelo menos esse valor para a viagem não dar prejuízo.
+      </div>
+      <div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:12px;flex-wrap:wrap">
+        <div style="text-align:center;padding:8px 10px;background:rgba(255,77,109,0.1);border:1px solid rgba(255,77,109,0.2);border-radius:10px">
+          <div style="font-size:0.6rem;color:var(--muted)">Custo total</div>
+          <div style="font-family:var(--font-display);font-weight:900;font-size:0.95rem;color:var(--red)" id="bau-min-custo">—</div>
+        </div>
+        <div style="font-size:1.2rem;color:var(--muted)">÷</div>
+        <div style="text-align:center;padding:8px 10px;background:rgba(74,158,255,0.1);border:1px solid rgba(74,158,255,0.2);border-radius:10px">
+          <div style="font-size:0.6rem;color:var(--muted)">Pedidos pagantes</div>
+          <div style="font-family:var(--font-display);font-weight:900;font-size:0.95rem;color:var(--blue)" id="bau-min-qtd">—</div>
+        </div>
+        <div style="font-size:1.2rem;color:var(--muted)">=</div>
+        <div style="text-align:center;padding:8px 10px;background:rgba(245,200,66,0.12);border:1px solid rgba(245,200,66,0.3);border-radius:10px">
+          <div style="font-size:0.6rem;color:var(--muted)">Mínimo/pedido</div>
+          <div style="font-family:var(--font-display);font-weight:900;font-size:0.95rem;color:var(--amber)" id="bau-min-ped">—</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Custos breakdown -->
+    <div class="sec-label">Custos da Viagem</div>
+    <div id="bau-summary-rows"></div>
+
+    <!-- Bar chart cities -->
+    <div class="sec-label">Faturamento por Cidade</div>
+    <div class="widget">
+      <div class="widget-hd">Todas as Cidades <span class="w-badge" id="bau-badge-top">—</span></div>
+      <div class="bar-list" id="bau-bars"></div>
+    </div>
+
+    <!-- Table -->
+    <div class="sec-label">Detalhamento dos Pedidos</div>
+    <div style="font-size:0.67rem;color:var(--muted);margin-bottom:8px;padding:7px 12px;background:rgba(255,255,255,0.03);border-radius:8px">
+      👆 Toque em qualquer cidade para ver <strong style="color:var(--white)">lojas concorrentes, casas de tinta e potencial de mercado</strong>
+    </div>
+    <div class="widget" style="padding:14px 8px">
+      <table class="city-table">
+        <thead>
+          <tr>
+            <th>#</th><th>Cidade</th>
+            <th style="text-align:center">Ped.</th>
+            <th>Valor</th>
+            <th style="text-align:center">Status</th>
+          </tr>
+        </thead>
+        <tbody id="bau-tbody"></tbody>
+      </table>
+    </div>
+
+    <!-- Comparativo 3 romaneios -->
+    <!-- SIMULADOR FRETE PRÓPRIO vs TERCEIRO -->
+    <div class="sec-label">Simulador — Próprio vs Terceiro</div>
+
+    <!-- Inputs -->
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:12px">
+      <div style="font-family:var(--font-display);font-weight:800;font-size:0.85rem;color:var(--white);margin-bottom:12px">⚙️ Parâmetros do Terceiro</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
+        <div>
+          <div style="font-size:0.65rem;color:var(--muted);margin-bottom:5px;text-transform:uppercase;letter-spacing:0.06em">Fixo por viagem</div>
+          <div style="display:flex;align-items:center;background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:9px;padding:0 10px;height:40px">
+            <span style="color:var(--muted);font-size:0.8rem;margin-right:4px">R$</span>
+            <input id="sim-fixo" type="number" value="3612" step="100"
+              style="background:transparent;border:none;outline:none;color:var(--white);font-family:var(--font-display);font-weight:800;font-size:1rem;width:100%"
+              oninput="runSim()">
+          </div>
+        </div>
+        <div>
+          <div style="font-size:0.65rem;color:var(--muted);margin-bottom:5px;text-transform:uppercase;letter-spacing:0.06em">% sobre faturado</div>
+          <div style="display:flex;align-items:center;background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:9px;padding:0 10px;height:40px">
+            <input id="sim-pct" type="number" value="2.5" step="0.1" min="0" max="20"
+              style="background:transparent;border:none;outline:none;color:var(--white);font-family:var(--font-display);font-weight:800;font-size:1rem;width:100%"
+              oninput="runSim()">
+            <span style="color:var(--muted);font-size:0.8rem;margin-left:4px">%</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Result cards per romaneio -->
+      <div style="display:flex;flex-direction:column;gap:8px" id="sim-results"></div>
+
+      <!-- Winner banner -->
+      <div id="sim-winner" style="margin-top:12px;border-radius:11px;padding:12px 14px;text-align:center"></div>
+    </div>
+
+    <div class="sec-label">Comparativo — 3 Romaneios</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:12px">
+      <div style="background:var(--card);border:1px solid rgba(240,106,15,0.3);border-radius:12px;overflow:hidden">
+        <div style="background:rgba(240,106,15,0.15);padding:8px;text-align:center">
+          <div style="font-family:var(--font-display);font-weight:900;font-size:0.82rem;color:var(--orange)">79.507</div>
+          <div style="font-size:0.55rem;color:var(--muted)">Concluído</div>
+        </div>
+        <div style="padding:8px;display:flex;flex-direction:column;gap:5px">
+          <div style="display:flex;justify-content:space-between;font-size:0.65rem"><span style="color:var(--muted)">Fat.</span><span style="font-weight:700">R$ 49.748</span></div>
+          <div style="display:flex;justify-content:space-between;font-size:0.65rem"><span style="color:var(--muted)">Custo</span><span style="font-weight:700;color:var(--red)">R$ 5.983</span></div>
+          <div style="display:flex;justify-content:space-between;font-size:0.65rem"><span style="color:var(--muted)">Margem</span><span style="font-weight:700;color:var(--green)">88,0%</span></div>
+          <div style="display:flex;justify-content:space-between;font-size:0.65rem"><span style="color:var(--muted)">KM</span><span style="font-weight:700">1.170 km</span></div>
+        </div>
+      </div>
+      <div style="background:var(--card);border:1px solid rgba(74,158,255,0.3);border-radius:12px;overflow:hidden">
+        <div style="background:rgba(74,158,255,0.12);padding:8px;text-align:center">
+          <div style="font-family:var(--font-display);font-weight:900;font-size:0.82rem;color:var(--blue)">80.252</div>
+          <div style="font-size:0.55rem;color:var(--muted)">Concluído</div>
+        </div>
+        <div style="padding:8px;display:flex;flex-direction:column;gap:5px">
+          <div style="display:flex;justify-content:space-between;font-size:0.65rem"><span style="color:var(--muted)">Fat.</span><span style="font-weight:700">R$ 64.145</span></div>
+          <div style="display:flex;justify-content:space-between;font-size:0.65rem"><span style="color:var(--muted)">Custo</span><span style="font-weight:700;color:var(--red)">R$ 6.446</span></div>
+          <div style="display:flex;justify-content:space-between;font-size:0.65rem"><span style="color:var(--muted)">Margem</span><span style="font-weight:700;color:var(--green)">90,0%</span></div>
+          <div style="display:flex;justify-content:space-between;font-size:0.65rem"><span style="color:var(--muted)">KM</span><span style="font-weight:700">1.310 km</span></div>
+        </div>
+      </div>
+      <div style="background:var(--card);border:1px solid rgba(0,201,140,0.3);border-radius:12px;overflow:hidden">
+        <div style="background:rgba(0,201,140,0.1);padding:8px;text-align:center">
+          <div style="font-family:var(--font-display);font-weight:900;font-size:0.82rem;color:var(--green)">80.719</div>
+          <div style="font-size:0.55rem;color:var(--muted)">Concluído</div>
+        </div>
+        <div style="padding:8px;display:flex;flex-direction:column;gap:5px">
+          <div style="display:flex;justify-content:space-between;font-size:0.65rem"><span style="color:var(--muted)">Fat.</span><span style="font-weight:700">R$ 48.953</span></div>
+          <div style="display:flex;justify-content:space-between;font-size:0.65rem"><span style="color:var(--muted)">Custo</span><span style="font-weight:700;color:var(--red)">R$ 5.850</span></div>
+          <div style="display:flex;justify-content:space-between;font-size:0.65rem"><span style="color:var(--muted)">Margem</span><span style="font-weight:700;color:var(--green)">88,0%</span></div>
+          <div style="display:flex;justify-content:space-between;font-size:0.65rem"><span style="color:var(--muted)">KM</span><span style="font-weight:700">1.130 km</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Combined total Bauru -->
+    <div style="background:linear-gradient(135deg,rgba(74,158,255,0.1),rgba(74,158,255,0.03));border:1px solid rgba(74,158,255,0.25);border-radius:14px;padding:14px;margin-bottom:12px">
+      <div style="font-size:0.62rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:10px">Total Combinado — 79.507 + 80.252 + 80.719</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <div style="text-align:center">
+          <div style="font-size:0.62rem;color:var(--muted)">Faturamento total</div>
+          <div style="font-family:var(--font-display);font-weight:900;font-size:1.2rem;color:var(--white)">R$ 162.847,31</div>
+        </div>
+        <div style="text-align:center">
+          <div style="font-size:0.62rem;color:var(--muted)">Margem total</div>
+          <div style="font-family:var(--font-display);font-weight:900;font-size:1.2rem;color:var(--green)">R$ 144.568,09</div>
+        </div>
+        <div style="text-align:center">
+          <div style="font-size:0.62rem;color:var(--muted)">Custo total (3 viagens)</div>
+          <div style="font-family:var(--font-display);font-weight:900;font-size:1rem;color:var(--red)">R$ 18.279,22</div>
+        </div>
+        <div style="text-align:center">
+          <div style="font-size:0.62rem;color:var(--muted)">Margem média</div>
+          <div style="font-family:var(--font-display);font-weight:900;font-size:1rem;color:var(--green)">88,8%</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
 </div><!-- /content -->
 
 <!-- BOTTOM TAB BAR -->
@@ -913,6 +1114,10 @@ html, body {
   <button class="tab-item" onclick="go('diretor')">
     <span class="tab-icon">🎯</span>
     <span class="tab-label">Diretor</span>
+  </button>
+  <button class="tab-item" onclick="go('bauru')">
+    <span class="tab-icon">🏙️</span>
+    <span class="tab-label">Bauru</span>
   </button>
 </nav>
 
@@ -1185,10 +1390,10 @@ function go(id) {
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.tab-item').forEach(b=>b.classList.remove('active'));
   document.getElementById('panel-'+id).classList.add('active');
-  const ids = ['overview','carga','rota','custos','km','mercado','diretor'];
+  const ids = ['overview','carga','rota','custos','km','mercado','diretor','bauru'];
   document.querySelectorAll('.tab-item')[ids.indexOf(id)].classList.add('active');
-  // scroll to top
   document.querySelector('.content').scrollTop = 0;
+  if (id === 'bauru') { setBauRom(currentBauRom); setTimeout(runSim, 50); }
   setTimeout(animateBars, 80);
 }
 
@@ -1538,7 +1743,353 @@ function tapCard(el) {
   setTimeout(()=>{ el.style.borderColor=''; el.style.transform=''; }, 600);
 }
 
-// ─── MERCADO DATA & RENDER ───
+// ─── BAURU ROUTE DATA ───
+const bauruRomaneios = {
+  1: {
+    nome: "79.507", pedidos: 31, pedidosPagantes: 29, cidades: 15,
+    faturado: 49748.43, km: 1170, dias: 3, tempo: "~17 h",
+    custoMotoristas: 1124.04, custoKm: 3872.70, custoHosp: 986.00,
+    custoTotal: 5982.74, margem: 43765.69, margemPct: 88.0,
+    obs: "2 bonificações não contam como pedido pagante",
+    trechos: [
+      { from:"Mauá",         to:"Botucatu/Conchas",        km:185 },
+      { from:"Botucatu",     to:"Avaré",                   km: 90 },
+      { from:"Avaré",        to:"Ág.Sta.Barbara/Pederneiras",km:80 },
+      { from:"Pederneiras",  to:"Agudos / Bauru",          km: 50 },
+      { from:"Bauru",        to:"Paulistânia / Pompeia",   km: 75 },
+      { from:"Pompeia",      to:"Marília / Osvaldo Cruz",  km:175 },
+      { from:"Osvaldo Cruz", to:"Lucélia / Guararapes",   km:145 },
+      { from:"Guararapes",   to:"Mauá (retorno)",         km:370 },
+    ],
+    cities: [
+      { city:"BAURU",                  orders:10, value:18820.02 },
+      { city:"OSVALDO CRUZ",           orders: 3, value: 8861.74 },
+      { city:"MARILIA",                orders: 2, value: 5084.51 },
+      { city:"BOTUCATU",               orders: 3, value: 3677.72 },
+      { city:"AVARE",                  orders: 2, value: 2196.78 },
+      { city:"GUARARAPES",             orders: 1, value: 1911.40 },
+      { city:"AGUAS DE SANTA BARBARA", orders: 1, value: 1517.47 },
+      { city:"PACAEMBU",               orders: 1, value: 1315.94 },
+      { city:"PAULISTANIA",            orders: 1, value: 1136.43 },
+      { city:"POMPEIA",                orders: 2, value: 1061.40 },
+      { city:"LUCELIA",                orders: 1, value:  944.06 },
+      { city:"CONCHAS",                orders: 1, value:  903.55 },
+      { city:"AGUDOS",                 orders: 1, value:  814.98 },
+      { city:"PEDERNEIRAS",            orders: 1, value:  796.45 },
+      { city:"LUCIANÓPOLIS",           orders: 1, value:  705.98 },
+    ]
+  },
+  2: {
+    nome: "80.252", pedidos: 32, pedidosPagantes: 31, cidades: 17,
+    faturado: 64145.78, km: 1310, dias: 3, tempo: "~19 h",
+    custoMotoristas: 1124.04, custoKm: 4336.10, custoHosp: 986.00,
+    custoTotal: 6446.14, margem: 57699.64, margemPct: 90.0,
+    devolucao: { cidade: "—", obs: "1 devolução total (valor não informado no arquivo)" },
+    obs: "1 bonificação + 1 devolução total",
+    trechos: [
+      { from:"Mauá",         to:"Areiópolis / Botucatu",  km:195 },
+      { from:"Botucatu",     to:"Avaré",                  km: 90 },
+      { from:"Avaré",        to:"Lençóis Paulista",       km: 75 },
+      { from:"Lençóis P.",   to:"Pederneiras / Agudos",   km: 40 },
+      { from:"Agudos",       to:"Bauru",                  km: 30 },
+      { from:"Bauru",        to:"Marília / Gália",        km: 95 },
+      { from:"Marília",      to:"Iacri / Tupã",           km: 80 },
+      { from:"Tupã",         to:"Adamantina / Paulicéia", km: 75 },
+      { from:"Paulicéia",    to:"Lucélia / Junqueirópolis",km:50 },
+      { from:"Lucélia",      to:"Mirandópolis / Guararapes",km:100},
+      { from:"Guararapes",   to:"Osvaldo Cruz",           km: 80 },
+      { from:"Osvaldo Cruz", to:"Mauá (retorno)",         km:400 },
+    ],
+    cities: [
+      { city:"BAURU",           orders:11, value:28468.77 },
+      { city:"OSVALDO CRUZ",    orders: 2, value: 5555.10 },
+      { city:"AVARE",           orders: 1, value: 4710.96 },
+      { city:"AREIOPOLIS",      orders: 3, value: 3285.07 },
+      { city:"MARILIA",         orders: 2, value: 3164.72 },
+      { city:"GALIA",           orders: 1, value: 3050.35 },
+      { city:"IACRI",           orders: 2, value: 2224.80 },
+      { city:"AGUDOS",          orders: 1, value: 2154.78 },
+      { city:"TUPA",            orders: 1, value: 2128.89 },
+      { city:"PEDERNEIRAS",     orders: 1, value: 1874.67 },
+      { city:"PAULICEIA",       orders: 1, value: 1778.42 },
+      { city:"MIRANDOPOLIS",    orders: 1, value: 1409.88 },
+      { city:"ADAMANTINA",      orders: 1, value: 1396.19 },
+      { city:"LENCOIS PAULISTA",orders: 2, value: 1308.79 },
+      { city:"GUARARAPES",      orders: 1, value:  956.24 },
+      { city:"JUNQUEIROPOLIS",  orders: 1, value:  678.15 },
+    ]
+  },
+  3: {
+    nome: "80.719", pedidos: 31, pedidosPagantes: 29, cidades: 13,
+    faturado: 48953.10, km: 1130, dias: 3, tempo: "~16 h",
+    custoMotoristas: 1124.04, custoKm: 3740.30, custoHosp: 986.00,
+    custoTotal: 5850.34, margem: 43102.76, margemPct: 88.0,
+    obs: "2 bonificações não contam como pedido pagante",
+    trechos: [
+      { from:"Mauá",         to:"Iaras / Avaré",          km:195 },
+      { from:"Avaré",        to:"Bauru / Agudos",         km:120 },
+      { from:"Bauru",        to:"Botucatu",               km: 55 },
+      { from:"Botucatu",     to:"Quintana / Marília",     km:100 },
+      { from:"Marília",      to:"Garça / Tupã",           km: 80 },
+      { from:"Tupã",         to:"Queiroz",                km: 60 },
+      { from:"Queiroz",      to:"Osvaldo Cruz",           km: 70 },
+      { from:"Osvaldo Cruz", to:"Guararapes / Araçatuba", km:110 },
+      { from:"Araçatuba",    to:"Mauá (retorno)",         km:340 },
+    ],
+    cities: [
+      { city:"BAURU",        orders:16, value:23905.88 },
+      { city:"QUEIROZ",      orders: 1, value: 8045.74 },
+      { city:"QUINTANA",     orders: 1, value: 3473.18 },
+      { city:"MARILIA",      orders: 3, value: 3130.87 },
+      { city:"IARAS",        orders: 1, value: 1614.29 },
+      { city:"AGUDOS",       orders: 1, value: 1483.65 },
+      { city:"GUARARAPES",   orders: 1, value: 1358.28 },
+      { city:"BOTUCATU",     orders: 2, value: 1273.51 },
+      { city:"ARAÇATUBA",    orders: 1, value: 1163.14 },
+      { city:"TUPA",         orders: 1, value: 1062.46 },
+      { city:"AVARE",        orders: 1, value:  925.05 },
+      { city:"GARÇA",        orders: 1, value:  805.05 },
+      { city:"OSVALDO CRUZ", orders: 1, value:  712.00 },
+    ]
+  }
+};
+
+let currentBauRom = 1;
+
+// ─── MERCADO DATA BAURU ───
+const bauruMercado = {
+  "BAURU":                  { pop:375, mat:65, tinta:18, pot:"🔴 Alto",     score:85, cor:"#ff4d6d", obs:"Maior cidade da rota. Alta demanda, muita concorrência. Fidelizar clientes existentes é essencial." },
+  "MARILIA":                { pop:231, mat:38, tinta:10, pot:"🔴 Alto",     score:80, cor:"#ff4d6d", obs:"Polo regional. Muitas construtoras ativas. Oportunidade de contratos mensais recorrentes." },
+  "ARAÇATUBA":              { pop:198, mat:32, tinta: 9, pot:"🔴 Alto",     score:78, cor:"#ff4d6d", obs:"Hub logístico regional. Alta demanda, alta concorrência. Foco em atendimento B2B." },
+  "BOTUCATU":               { pop:148, mat:22, tinta: 7, pot:"🟠 Médio",    score:72, cor:"#f5922a", obs:"Cidade universitária + polo industrial. Demanda estável, concorrência moderada." },
+  "AVARE":                  { pop: 92, mat:16, tinta: 5, pot:"🟠 Médio",    score:68, cor:"#f5922a", obs:"Polo regional do sul. Construção residencial crescente. Mercado parcialmente atendido." },
+  "TUPA":                   { pop: 64, mat:12, tinta: 4, pot:"🟠 Médio",    score:63, cor:"#f5922a", obs:"Polo regional, concorrência maior. Diferenciar por prazo de entrega ou preço." },
+  "LENCOIS PAULISTA":       { pop: 64, mat:11, tinta: 3, pot:"🟠 Médio",    score:65, cor:"#f5922a", obs:"Polo sucroalcooleiro. Obras de usinas e silos geram demanda constante e volume." },
+  "PEDERNEIRAS":            { pop: 43, mat: 9, tinta: 3, pot:"🟡 Moderado", score:61, cor:"#f5c842", obs:"Polo cerâmico, mas mercado já bem atendido localmente." },
+  "GARÇA":                  { pop: 44, mat: 9, tinta: 3, pot:"🟡 Moderado", score:60, cor:"#f5c842", obs:"Concorrência razoável para o tamanho. Mercado estável." },
+  "OSVALDO CRUZ":           { pop: 32, mat: 8, tinta: 3, pot:"🟢 Bom",      score:75, cor:"#00c98c", obs:"Cidade pequena no extremo oeste. Poucos concorrentes diretos, boa taxa de fidelização." },
+  "AGUDOS":                 { pop: 36, mat: 8, tinta: 2, pot:"🟢 Bom",      score:70, cor:"#00c98c", obs:"Polo moveleiro. Obras de expansão industrial frequentes. Demanda B2B relevante." },
+  "ADAMANTINA":             { pop: 35, mat: 8, tinta: 2, pot:"🟡 Moderado", score:60, cor:"#f5c842", obs:"Cidade bem servida para seu tamanho. Mercado já disputado." },
+  "GUARARAPES":             { pop: 31, mat: 7, tinta: 2, pot:"🟢 Bom",      score:71, cor:"#00c98c", obs:"Mercado pouco explorado. Próxima de Araçatuba, boa posição logística." },
+  "POMPEIA":                { pop: 24, mat: 6, tinta: 2, pot:"🟡 Moderado", score:58, cor:"#f5c842", obs:"Mercado razoável para o tamanho. Verificar presença de representante local." },
+  "MIRANDOPOLIS":           { pop: 27, mat: 6, tinta: 2, pot:"🟡 Moderado", score:57, cor:"#f5c842", obs:"Mercado moderado. Verificar se há distribuidor exclusivo na região." },
+  "LUCELIA":                { pop: 20, mat: 5, tinta: 1, pot:"🟢 Bom",      score:67, cor:"#00c98c", obs:"Cidade pequena do extremo oeste. Poucos concorrentes, boa penetração possível." },
+  "PACAEMBU":               { pop: 17, mat: 4, tinta: 1, pot:"🟢 Bom",      score:69, cor:"#00c98c", obs:"Região agrícola com crescimento de obras de silos e galpões rurais." },
+  "JUNQUEIROPOLIS":         { pop: 20, mat: 4, tinta: 1, pot:"🟢 Bom",      score:64, cor:"#00c98c", obs:"Cidade pequena no extremo oeste. Poucos concorrentes diretos." },
+  "AGUAS DE SANTA BARBARA": { pop: 18, mat: 3, tinta: 1, pot:"🟢 Bom",      score:73, cor:"#00c98c", obs:"Baixíssima concorrência. Potencial real de ser o único fornecedor regular." },
+  "CONCHAS":                { pop: 17, mat: 3, tinta: 1, pot:"🟢 Bom",      score:68, cor:"#00c98c", obs:"Turismo e chácaras em alta. Nichos de acabamento e tinta decorativa." },
+  "AREIOPOLIS":             { pop: 10, mat: 2, tinta: 1, pot:"🟢 Bom",      score:66, cor:"#00c98c", obs:"Crescimento de pequenas obras residenciais na região." },
+  "GALIA":                  { pop:  9, mat: 2, tinta: 0, pot:"🟢 Bom",      score:67, cor:"#00c98c", obs:"Baixíssima concorrência. Quem chegar primeiro fideliza com facilidade." },
+  "IACRI":                  { pop:  8, mat: 2, tinta: 0, pot:"🟢 Bom",      score:65, cor:"#00c98c", obs:"Pequena cidade, demanda básica mas sem concorrentes. Boa taxa de retorno." },
+  "PAULICEIA":              { pop: 10, mat: 2, tinta: 1, pot:"🟢 Bom",      score:64, cor:"#00c98c", obs:"Próxima de Dracena. Atender como extensão da rota maximiza a viagem." },
+  "QUINTANA":               { pop:  8, mat: 2, tinta: 0, pot:"🟢 Bom",      score:66, cor:"#00c98c", obs:"Setor agroindustrial crescente. Construção de barracões rurais em alta." },
+  "PAULISTANIA":            { pop:  4, mat: 1, tinta: 0, pot:"🟡 Moderado", score:52, cor:"#f5c842", obs:"Cidade muito pequena. Demanda baixa, mas zero concorrência." },
+  "LUCIANÓPOLIS":           { pop:  3, mat: 1, tinta: 0, pot:"🟡 Moderado", score:48, cor:"#f5c842", obs:"Menor cidade da rota. Atendimento de passagem é suficiente." },
+  "IARAS":                  { pop:  6, mat: 1, tinta: 0, pot:"🟢 Bom",      score:70, cor:"#00c98c", obs:"Cidade pequena, demanda básica. Boa penetração para ser fornecedor fixo." },
+  "QUEIROZ":                { pop:  5, mat: 1, tinta: 0, pot:"🟢 Bom",      score:71, cor:"#00c98c", obs:"Sem concorrentes diretos. Primeiro a atender regularmente já fideliza." },
+};
+
+function setBauRom(num) {
+  currentBauRom = num;
+  const r = bauruRomaneios[num];
+  const activeStyle   = 'flex:1;padding:8px 4px;border-radius:10px;border:1px solid rgba(240,106,15,0.5);background:rgba(240,106,15,0.15);color:var(--orange);font-family:var(--font-display);font-weight:800;font-size:0.75rem;cursor:pointer;transition:all 0.2s';
+  const inactiveStyle = 'flex:1;padding:8px 4px;border-radius:10px;border:1px solid var(--border);background:transparent;color:var(--muted);font-family:var(--font-display);font-weight:800;font-size:0.75rem;cursor:pointer;transition:all 0.2s';
+  [1,2,3].forEach(i => {
+    const b = document.getElementById('bau-btn-'+i);
+    if (b) b.style.cssText = i === num ? activeStyle : inactiveStyle;
+  });
+
+  const set = (id, v) => { const e = document.getElementById(id); if (e) e.textContent = v; };
+  const minPed = r.custoTotal / r.pedidosPagantes;
+  const limAtencao = minPed * 1.5;
+
+  // KPIs
+  set('bau-kpi-pedidos',  r.pedidos);
+  set('bau-kpi-cidades',  `${r.cidades} cidades · ${r.pedidosPagantes} NFs`);
+  set('bau-kpi-fat',      brl(r.faturado));
+  set('bau-kpi-nfs',      `${r.pedidosPagantes} pedidos pagantes`);
+  set('bau-kpi-marg-pct', r.margemPct + '%');
+  set('bau-kpi-marg-val', brl(r.margem));
+  set('bau-kpi-km',       r.km.toLocaleString('pt-BR') + ' km');
+
+  // Min pedido formula
+  set('bau-min-custo', brl(r.custoTotal));
+  set('bau-min-qtd',   r.pedidosPagantes + ' ped.');
+  set('bau-min-ped',   brl(minPed));
+
+  // Summary rows
+  const srEl = document.getElementById('bau-summary-rows');
+  if (srEl) {
+    const rows = [
+      { icon:"💰", name:"Faturamento",        sub:`${r.pedidos} pedidos · ${r.cidades} cidades`,  val: r.faturado,        color:"var(--orange)", cls:"total-row" },
+      { icon:"👤", name:"Motorista (1 c/ H.E.)", sub:`R$8.242,94 ÷ 22d × ${r.dias}d`,            val:-r.custoMotoristas, color:"var(--red)"    },
+      { icon:"🛣️", name:"Custo km",            sub:`${r.km.toLocaleString('pt-BR')} km × R$3,31`, val:-r.custoKm,         color:"var(--red)"    },
+      { icon:"🏨", name:"Hospedagem",          sub:`${r.dias} dias`,                              val:-r.custoHosp,       color:"var(--red)"    },
+      { icon:"📊", name:"Custo Total",         sub:`${((r.custoTotal/r.faturado)*100).toFixed(1)}% do faturado`,         val:-r.custoTotal,     color:"var(--red)",    cls:"total-row" },
+      { icon:"📈", name:"Margem Operacional",  sub:`${r.margemPct}% do faturado`,                 val: r.margem,          color:"var(--green)",  cls:"margin-row" },
+    ];
+    srEl.innerHTML = rows.map(row => `
+      <div class="stat-row ${row.cls||''}">
+        <div class="sr-info">
+          <span class="sr-icon">${row.icon}</span>
+          <div><div class="sr-name">${row.name}</div><div class="sr-sub">${row.sub}</div></div>
+        </div>
+        <div class="sr-val" style="color:${row.color}">${row.val<0?'- '+brl(Math.abs(row.val)):brl(row.val)}</div>
+      </div>`).join('');
+  }
+
+  // Bars
+  const maxV = r.cities[0].value;
+  set('bau-badge-top', `${r.cities.length} cidades`);
+  set('bau-kpi-km', r.km.toLocaleString('pt-BR') + ' km · ' + r.tempo);
+  makeBars('bau-bars', r.cities.map(c => ({ label:c.city, value:c.value, display:brl(c.value) })), maxV);
+
+  // Table with status + market expandable
+  const tb = document.getElementById('bau-tbody');
+  if (tb) {
+    tb.innerHTML = r.cities.map((c, i) => {
+      const vpd = c.value / c.orders;
+      const mk = bauruMercado[c.city.toUpperCase()] || bauruMercado[c.city] || null;
+      let statusHtml;
+      if (vpd < minPed)          statusHtml = `<span style="font-size:0.6rem;font-weight:700;color:var(--red);background:rgba(255,77,109,0.12);padding:2px 5px;border-radius:6px">🔴 Baixo</span>`;
+      else if (vpd < limAtencao) statusHtml = `<span style="font-size:0.6rem;font-weight:700;color:var(--amber);background:rgba(245,200,66,0.12);padding:2px 5px;border-radius:6px">⚠️ Atenção</span>`;
+      else                       statusHtml = `<span style="font-size:0.6rem;color:var(--green);background:rgba(0,201,140,0.1);padding:2px 5px;border-radius:6px">✅</span>`;
+      const rowBg = vpd < minPed ? 'background:rgba(255,77,109,0.04)' : vpd < limAtencao ? 'background:rgba(245,200,66,0.03)' : '';
+
+      const mkRow = mk ? `
+        <tr class="mk-row-${i}" style="display:none">
+          <td colspan="5" style="padding:0 0 8px 0">
+            <div style="background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:10px;padding:10px 12px;margin:0 4px">
+              <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:8px">
+                <div style="text-align:center;padding:6px;background:rgba(255,255,255,0.04);border-radius:8px">
+                  <div style="font-size:0.58rem;color:var(--muted)">🏗️ Mat. Construção</div>
+                  <div style="font-family:var(--font-display);font-weight:900;font-size:1rem;color:var(--white)">${mk.mat}</div>
+                  <div style="font-size:0.55rem;color:var(--muted)">lojas</div>
+                </div>
+                <div style="text-align:center;padding:6px;background:rgba(255,255,255,0.04);border-radius:8px">
+                  <div style="font-size:0.58rem;color:var(--muted)">🎨 Casa de Tinta</div>
+                  <div style="font-family:var(--font-display);font-weight:900;font-size:1rem;color:var(--white)">${mk.tinta}</div>
+                  <div style="font-size:0.55rem;color:var(--muted)">lojas</div>
+                </div>
+                <div style="text-align:center;padding:6px;background:rgba(255,255,255,0.04);border-radius:8px">
+                  <div style="font-size:0.58rem;color:var(--muted)">👥 População</div>
+                  <div style="font-family:var(--font-display);font-weight:900;font-size:1rem;color:var(--white)">${mk.pop}k</div>
+                  <div style="font-size:0.55rem;color:var(--muted)">habitantes</div>
+                </div>
+              </div>
+              <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px">
+                <span style="font-size:0.68rem;font-weight:700;color:var(--muted)">Potencial:</span>
+                <span style="font-size:0.7rem;font-weight:700">${mk.pot}</span>
+                <div style="flex:1;height:5px;background:rgba(255,255,255,0.06);border-radius:3px;overflow:hidden">
+                  <div style="height:100%;width:${mk.score}%;background:${mk.cor};border-radius:3px"></div>
+                </div>
+                <span style="font-size:0.68rem;font-family:var(--font-display);font-weight:800;color:${mk.cor}">${mk.score}</span>
+              </div>
+              <div style="font-size:0.68rem;color:var(--muted);line-height:1.5;padding:6px 8px;background:rgba(255,255,255,0.02);border-radius:7px;border-left:2px solid ${mk.cor}">
+                💡 ${mk.obs}
+              </div>
+            </div>
+          </td>
+        </tr>` : '';
+
+      return `<tr style="${rowBg};cursor:pointer" onclick="toggleMk(${i})">
+        <td><span class="rank-chip">${i+1}</span></td>
+        <td style="font-size:0.7rem">
+          <div style="display:flex;align-items:center;gap:5px">
+            ${c.city}
+            ${mk ? `<span style="font-size:0.55rem;color:${mk.cor};background:rgba(255,255,255,0.05);padding:1px 4px;border-radius:4px">${mk.pot.split(' ')[0]}</span>` : ''}
+          </div>
+        </td>
+        <td style="text-align:center"><span class="orders-dot">${c.orders}</span></td>
+        <td>${brl(c.value)}</td>
+        <td style="text-align:center">${statusHtml}</td>
+      </tr>${mkRow}`;
+    }).join('');
+  }
+
+  setTimeout(animateBars, 80);
+}
+
+// ─── SIMULADOR PRÓPRIO vs TERCEIRO ───
+function runSim() {
+  const fixo = parseFloat(document.getElementById('sim-fixo')?.value) || 3612;
+  const pct  = parseFloat(document.getElementById('sim-pct')?.value) / 100 || 0.025;
+  const resultsEl = document.getElementById('sim-results');
+  const winnerEl  = document.getElementById('sim-winner');
+  if (!resultsEl) return;
+
+  let totalProprio = 0, totalTerceiro = 0, totalFat = 0;
+
+  resultsEl.innerHTML = [1,2,3].map(i => {
+    const r = bauruRomaneios[i];
+    const fat = r.faturado;
+    const cp  = r.custoTotal;
+    const ct  = round2(fixo + fat * pct);
+    const mp  = round2(fat - cp);
+    const mt  = round2(fat - ct);
+    const diff = round2(ct - cp);
+    const propMelhor = cp <= ct;
+    totalProprio += cp; totalTerceiro += ct; totalFat += fat;
+    return `
+    <div style="background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:12px;padding:11px 13px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+        <div style="font-family:var(--font-display);font-weight:800;font-size:0.82rem;color:var(--white)">Romaneio ${r.nome}</div>
+        <div style="font-size:0.65rem;font-weight:700;padding:3px 8px;border-radius:7px;${propMelhor?'background:rgba(240,106,15,0.15);color:var(--orange)':'background:rgba(0,201,140,0.12);color:var(--green)'}">
+          ${propMelhor?'🚛 Próprio vence':'🤝 Terceiro vence'}
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+        <div style="padding:8px;background:rgba(240,106,15,0.07);border:1px solid rgba(240,106,15,0.18);border-radius:9px;text-align:center">
+          <div style="font-size:0.58rem;color:var(--muted);margin-bottom:2px">🚛 Custo Próprio</div>
+          <div style="font-family:var(--font-display);font-weight:900;font-size:0.88rem;color:var(--orange)">${brl(cp)}</div>
+          <div style="font-size:0.6rem;color:var(--muted);margin-top:2px">Margem ${((mp/fat)*100).toFixed(1)}%</div>
+        </div>
+        <div style="padding:8px;background:rgba(74,158,255,0.07);border:1px solid rgba(74,158,255,0.18);border-radius:9px;text-align:center">
+          <div style="font-size:0.58rem;color:var(--muted);margin-bottom:2px">🤝 Custo Terceiro</div>
+          <div style="font-family:var(--font-display);font-weight:900;font-size:0.88rem;color:var(--blue)">${brl(ct)}</div>
+          <div style="font-size:0.6rem;color:var(--muted);margin-top:2px">Margem ${((mt/fat)*100).toFixed(1)}%</div>
+        </div>
+      </div>
+      <div style="margin-top:7px;padding:6px 10px;border-radius:8px;text-align:center;font-size:0.7rem;${propMelhor?'background:rgba(240,106,15,0.08);color:var(--orange)':'background:rgba(0,201,140,0.08);color:var(--green)'}">
+        ${propMelhor
+          ? `Próprio economiza <strong>${brl(Math.abs(diff))}</strong> (${((Math.abs(diff)/fat)*100).toFixed(2)}% do fat.)`
+          : `Terceiro economiza <strong>${brl(Math.abs(diff))}</strong> (${((Math.abs(diff)/fat)*100).toFixed(2)}% do fat.)`}
+      </div>
+    </div>`;
+  }).join('');
+
+  const totalDiff = round2(totalTerceiro - totalProprio);
+  const propVence = totalProprio <= totalTerceiro;
+  const pctDiff   = ((Math.abs(totalDiff)/totalFat)*100).toFixed(2);
+  winnerEl.style.cssText = `margin-top:12px;border-radius:11px;padding:14px;text-align:center;background:${propVence?'rgba(240,106,15,0.12)':'rgba(0,201,140,0.1)'};border:1px solid ${propVence?'rgba(240,106,15,0.3)':'rgba(0,201,140,0.3)'}`;
+  winnerEl.innerHTML = `
+    <div style="font-size:0.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:6px">Resultado Total — 3 Viagens</div>
+    <div style="font-family:var(--font-display);font-weight:900;font-size:1.2rem;color:${propVence?'var(--orange)':'var(--green)'}">
+      ${propVence?'🚛 Entrega Própria é mais vantajosa':'🤝 Terceiro é mais vantajoso'}
+    </div>
+    <div style="font-size:0.75rem;color:var(--muted);margin-top:5px">
+      Diferença total: <strong style="color:var(--white)">${brl(Math.abs(totalDiff))}</strong> · ${pctDiff}% do faturado
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px">
+      <div style="background:rgba(240,106,15,0.08);border-radius:8px;padding:8px">
+        <div style="font-size:0.6rem;color:var(--muted)">Total Próprio (3 viagens)</div>
+        <div style="font-family:var(--font-display);font-weight:800;color:var(--orange)">${brl(totalProprio)}</div>
+      </div>
+      <div style="background:rgba(74,158,255,0.08);border-radius:8px;padding:8px">
+        <div style="font-size:0.6rem;color:var(--muted)">Total Terceiro (3 viagens)</div>
+        <div style="font-family:var(--font-display);font-weight:800;color:var(--blue)">${brl(totalTerceiro)}</div>
+      </div>
+    </div>`;
+}
+function round2(v) { return Math.round(v * 100) / 100; }
+
+function toggleMk(i) {
+  const rows = document.querySelectorAll('.mk-row-' + i);
+  rows.forEach(r => {
+    r.style.display = r.style.display === 'none' ? 'table-row' : 'none';
+  });
+}
+
 const trechos = [
   { de:"Mauá",        ate:"Franca",        km:380, pop:"347k", lojas:41, obs:"Cidade grande, muita concorrência e demanda" },
   { de:"Franca",      ate:"Sertãozinho",   km:80,  pop:"131k", lojas:18, obs:"Polo sucroalcooleiro, obras industriais frequentes" },
